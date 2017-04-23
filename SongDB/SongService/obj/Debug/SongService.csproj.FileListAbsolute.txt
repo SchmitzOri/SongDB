@@ -1,0 +1,7 @@
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\bin\Debug\SongService.dll
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\bin\Debug\SongService.pdb
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\obj\Debug\SongService.csprojResolveAssemblyReference.cache
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\obj\Debug\SongService.dll
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\obj\Debug\SongService.pdb
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\bin\Debug\CommonDTO.dll
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\bin\Debug\CommonDTO.pdb

@@ -1,0 +1,5 @@
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\CommonDTO\bin\Debug\CommonDTO.dll
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\CommonDTO\bin\Debug\CommonDTO.pdb
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\CommonDTO\obj\Debug\CommonDTO.dll
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\CommonDTO\obj\Debug\CommonDTO.pdb
+c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\CommonDTO\obj\Debug\CommonDTO.csprojResolveAssemblyReference.cache
