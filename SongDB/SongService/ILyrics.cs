@@ -17,5 +17,7 @@ namespace SongService
         [OperationContract]
         GetWordsResponse GetWords(GetWordsRequest request);
 
+        [OperationContract]
+        GetStatsResponse GetStats(GetStatsRequest request);
     }
 }
