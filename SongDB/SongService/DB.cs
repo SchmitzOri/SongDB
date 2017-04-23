@@ -42,7 +42,7 @@ namespace SongService
                 }
                 else
                 {
-                    using (SqlCommand comm = new SqlCommand("SELECT word_id, word " +
+                    using (SqlCommand comm = new SqlCommand("SELECT DISTINCT w.word_id, word " +
                                                             "FROM word w " +
                                                             "JOIN location l ON w.word_id = l.word_id " +
                                                             "WHERE song_id = @song_id", conn))
@@ -57,6 +57,31 @@ namespace SongService
                             }
                         }
                     }
+                }
+
+                return ret;
+            }
+        }
+
+        internal static SongsResponse Songs()
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("SELECT song_id,song_name, artist_id FROM song", conn))
+            using (SqlDataReader dr = comm.ExecuteReader())
+            {
+                SongsResponse ret = new SongsResponse()
+                {
+                    Songs = new List<SongDTO>(),
+                };
+
+                while (dr.Read())
+                {
+                    ret.Songs.Add(new SongDTO()
+                    {
+                        ArtistId = Guid.Parse(dr["artist_id"].ToString()),
+                        Id = Guid.Parse(dr["song_id"].ToString()),
+                        Name = dr["song_name"].ToString()
+                    });
                 }
 
                 return ret;

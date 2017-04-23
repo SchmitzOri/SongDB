@@ -37,6 +37,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "LyricsSite", "LyricsSite\",
 		SlnRelativePath = "LyricsSite\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyricsConcord", "LyricsConcord\LyricsConcord.csproj", "{AC2A3214-EB13-4401-83C4-63A74EF1A1E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{60FA130D-2DB7-417B-8125-EF17D0B248D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60FA130D-2DB7-417B-8125-EF17D0B248D4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{60FA130D-2DB7-417B-8125-EF17D0B248D4}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{AC2A3214-EB13-4401-83C4-63A74EF1A1E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC2A3214-EB13-4401-83C4-63A74EF1A1E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC2A3214-EB13-4401-83C4-63A74EF1A1E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC2A3214-EB13-4401-83C4-63A74EF1A1E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,5 +74,6 @@ Global
 		{C2F27D55-229B-43D6-B9FA-4B3FEA1C8DD5} = {2649D3E6-6918-40EE-8B58-CC146E9197A2}
 		{C3FFBBF2-8CCD-4BAD-9F31-D87DF4158EE2} = {7DB56D76-E3CA-4272-AD0D-A323AD00780A}
 		{60FA130D-2DB7-417B-8125-EF17D0B248D4} = {7DB56D76-E3CA-4272-AD0D-A323AD00780A}
+		{AC2A3214-EB13-4401-83C4-63A74EF1A1E5} = {7F73D150-94D9-4AC9-80B3-082D3732DD63}
 	EndGlobalSection
 EndGlobal
