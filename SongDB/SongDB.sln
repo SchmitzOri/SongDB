@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongService", "SongService\SongService.csproj", "{EA632355-1618-487E-B32E-056967361A05}"
 EndProject
@@ -15,9 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{7DB56D76-E3C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppChecker", "AppChecker\AppChecker.csproj", "{C3FFBBF2-8CCD-4BAD-9F31-D87DF4158EE2}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "LyricsSite(1)", "LyricsSite\", "{60FA130D-2DB7-417B-8125-EF17D0B248D4}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "LyricsSite", "LyricsSite\", "{60FA130D-2DB7-417B-8125-EF17D0B248D4}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.2"
+		ProjectReferences = "{ea632355-1618-487e-b32e-056967361a05}|SongService.dll;{C2F27D55-229B-43D6-B9FA-4B3FEA1C8DD5}|CommonDTO.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_9859"
 		Debug.AspNetCompiler.PhysicalPath = "LyricsSite\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_9859\"
