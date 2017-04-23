@@ -14,7 +14,7 @@ namespace SongService
     public class Lyrics : ILyrics
     {
 
-        public Guid UploadSong(Stream file)
+        public UploadSongResponse UploadSong(Stream file)
         {
             string Artist = null;
             string Name = null;
@@ -27,7 +27,7 @@ namespace SongService
                 Lyrics = sr.ReadToEnd().Trim();
             }
 
-            return DB.AddSongLyrics(Artist, Name, Lyrics);
+            return new UploadSongResponse() { SongId = DB.AddSongLyrics(Artist, Name, Lyrics) };
         }
 
         public bool UploadMultipleSongs(Stream file)

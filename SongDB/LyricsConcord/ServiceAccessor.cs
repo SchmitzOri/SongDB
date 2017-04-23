@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonDTO;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -55,6 +56,23 @@ namespace LyricsConcord
             catch (Exception)
             {
                 return default(S);
+            }
+        }
+
+        public static Guid UploadSong(string songPath)
+        {
+            try
+            {
+                using (WebClient uploader = new WebClient())
+                {
+                    uploader.UploadFile(new Uri(ConfigurationManager.AppSettings["ServiceURL"] + "UploadSong"), songPath);
+
+                    return Guid.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                return Guid.Empty;
             }
         }
 

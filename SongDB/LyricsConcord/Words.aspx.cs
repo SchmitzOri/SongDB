@@ -14,6 +14,12 @@ namespace LyricsConcord
         protected SongsResponse songs;
         protected void Page_Load(object sender, EventArgs e)
         {
+            //using (System.IO.FileStream fs = System.IO.File.Open(@"C:\temp\0.txt", System.IO.FileMode.Open))
+            {
+                ServiceAccessor.UploadSong(@"C:\temp\0.txt");
+            }
+
+
             songs = ServiceAccessor.MakeRequest<SongsRequest, SongsResponse>(new SongsRequest(), "Songs");
         }
 
