@@ -61,6 +61,30 @@ namespace SongService
             }
         }
 
+        internal static GetStatsResponse GetStats()
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("SELECT CASE num_of_rows WHEN 0 THEN 0 ELSE (num_of_characters / num_of_words) END chars_per_word, " +
+                                                    "CASE num_of_rows WHEN 0 THEN 0 ELSE(num_of_words / num_of_rows) END words_in_row, " +
+                                                    "CASE num_of_verses WHEN 0 THEN 0 ELSE(num_of_rows / num_of_verses) END rows_in_verse, " +
+                                                    "CASE num_of_songs WHEN 0 THEN 0 ELSE(num_of_verses / num_of_songs) END verses_in_songs " +
+                                                    "FROM stats", conn))
+            using (SqlDataReader dr = comm.ExecuteReader())
+            {
+                if (dr.Read())
+                {
+                    return new GetStatsResponse()
+                    {
+                        CharsPerWord = Convert.ToDecimal(dr["chars_per_word"]),
+                        RowsInVerse = Convert.ToDecimal(dr["rows_in_verse"]),
+                        VersesInSongs = Convert.ToDecimal(dr["verses_in_songs"]),
+                        WordsInRow = Convert.ToDecimal(dr["words_in_row"]),
+                    };
+                }
+                return null;
+            }
+        }
+
         internal static Guid AddSongLyrics(string Artist, string Song, string Lyrics)
         {
             Guid songId = Guid.NewGuid();

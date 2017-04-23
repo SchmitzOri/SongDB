@@ -33,7 +33,7 @@ namespace SongService
         {
             try
             {
-                return new GetStatsResponse();
+                return DB.GetStats();
             }
             catch (Exception)
             {
