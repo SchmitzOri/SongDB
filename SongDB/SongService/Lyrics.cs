@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -29,22 +30,24 @@ namespace SongService
             return DB.AddSongLyrics(Artist, Name, Lyrics);
         }
 
-        public Guid UploadMultipleSongs(Stream file)
+        public bool UploadMultipleSongs(Stream file)
         {
-            //string Artist = null;
-            //string Name = null;
-            //string Lyrics = null;
-
-            //using (StreamReader sr = new StreamReader(file))
-            //{
-            //    Artist = sr.ReadLine();
-            //    Name = sr.ReadLine();
-            //    Lyrics = sr.ReadToEnd().Trim();
-            //}
-
-            //return DB.AddSongLyrics(Artist, Name, Lyrics);
+            var gzip = new GZipStream(file, CompressionMode.Decompress);
+            //new ZipArchive
             //TODO: UploadMultipleSongs
-            return Guid.Empty;
+            return true;
+        }
+
+        public SongsResponse Songs(SongsRequest request)
+        {
+            try
+            {
+                return DB.Songs();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public GetWordsResponse GetWords(GetWordsRequest request)
@@ -53,9 +56,11 @@ namespace SongService
             {
                 return DB.GetWords(request.SongId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                var x = new GetWordsResponse() { Words = new List<Tuple<Guid, string>>() };
+                x.Words.Add(new Tuple<Guid, string>(Guid.Empty, ex.ToString()));
+                return x;
             }
         }
 
