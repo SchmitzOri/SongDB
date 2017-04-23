@@ -12,12 +12,30 @@ namespace SongService
     interface ILyrics
     {
         [OperationContract]
-        string Hello(int x);
-
-        [OperationContract]
         GetWordsResponse GetWords(GetWordsRequest request);
 
         [OperationContract]
         GetStatsResponse GetStats(GetStatsRequest request);
+
+        [OperationContract]
+        GroupAddResponse GroupAdd(GroupAddRequest request);
+
+        [OperationContract]
+        GroupUpdateResponse GroupUpdate(GroupUpdateRequest request);
+
+        [OperationContract]
+        GroupDeleteResponse GroupDelete(GroupDeleteRequest request);
+
+        [OperationContract]
+        RelationAddResponse RelationAdd(RelationAddRequest request);
+
+        [OperationContract]
+        RelationDeleteResponse RelationDelete(RelationDeleteRequest request);
+
+        [OperationContract]
+        PhraseAddResponse PhraseAdd(PhraseAddRequest request);
+
+        [OperationContract]
+        PhraseDeleteResponse PhraseDelete(PhraseDeleteRequest request);
     }
 }

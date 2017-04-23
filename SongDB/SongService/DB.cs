@@ -12,12 +12,14 @@ namespace SongService
 {
     public static class DB
     {
+        #region Connection
         private static SqlConnection GetConnection()
         {
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["CONN_STRING"].ConnectionString);
             conn.Open();
             return conn;
         }
+        #endregion
 
         internal static GetWordsResponse GetWords(Guid? songId)
         {
@@ -58,6 +60,158 @@ namespace SongService
                 }
 
                 return ret;
+            }
+        }
+
+        internal static Guid GroupAdd(string name)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("INSERT INTO group (group_id, group_name) VALUES (@group_id, @group_name)", conn))
+            {
+                Guid groupId = Guid.NewGuid();
+                comm.Parameters.AddWithValue("@group_id", groupId);
+                comm.Parameters.AddWithValue("@group_name", name);
+                comm.ExecuteNonQuery();
+
+                return groupId;
+            }
+        }
+
+        internal static bool GroupUpdate(Guid id, string name, List<Guid> words)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlTransaction trans = conn.BeginTransaction())
+            {
+                using (SqlCommand comm = new SqlCommand("DELETE group_words WHERE group_id = @group_id", conn))
+                {
+                    comm.Parameters.AddWithValue("@group_id", id);
+                    comm.ExecuteNonQuery();
+                }
+
+                foreach (var wordId in words)
+                {
+                    using (SqlCommand comm = new SqlCommand("INSERT INTO group_words (group_id, word_id) VALUES (@group_id, @word_id)", conn))
+                    {
+                        comm.Parameters.AddWithValue("@group_id", id);
+                        comm.Parameters.AddWithValue("@word_id", wordId);
+                        comm.ExecuteNonQuery();
+                    }
+                }
+
+                using (SqlCommand comm = new SqlCommand("UPDATE group SET group_name = @group_name WHERE group_id = @group_id", conn))
+                {
+                    comm.Parameters.AddWithValue("@group_id", id);
+                    comm.Parameters.AddWithValue("@group_name", name);
+                    comm.ExecuteNonQuery();
+                }
+
+                trans.Commit();
+                return true;
+            }
+        }
+
+        internal static bool GroupDelete(Guid id)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlTransaction trans = conn.BeginTransaction())
+            {
+                using (SqlCommand comm = new SqlCommand("DELETE group_words WHERE group_id = @group_id", conn))
+                {
+                    comm.Parameters.AddWithValue("@group_id", id);
+                    comm.ExecuteNonQuery();
+                }
+
+                using (SqlCommand comm = new SqlCommand("DELETE group WHERE group_id = @group_id", conn))
+                {
+                    comm.Parameters.AddWithValue("@group_id", id);
+                    comm.ExecuteNonQuery();
+                }
+
+                trans.Commit();
+                return true;
+            }
+        }
+
+        internal static Guid PhraseAdd(List<Guid> words)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlTransaction trans = conn.BeginTransaction())
+            {
+                Guid phraseId = Guid.NewGuid();
+
+                using (SqlCommand comm = new SqlCommand("INSERT INTO phrase (phrase_id) VALUES (@phrase_id)", conn))
+                {
+                    comm.Parameters.AddWithValue("@phrase_id", phraseId);
+                    comm.ExecuteNonQuery();
+                }
+
+                for (int i = 1; i <= words.Count; i++)
+                {
+                    using (SqlCommand comm = new SqlCommand("INSERT INTO phrase_words (phrase_id, word_id, order_index) VALUES (@phrase_id, @word_id, @order_index)", conn))
+                    {
+                        comm.Parameters.AddWithValue("@phrase_id", phraseId);
+                        comm.Parameters.AddWithValue("@word_id", words[i]);
+                        comm.Parameters.AddWithValue("@order_index", i);
+
+                        comm.ExecuteNonQuery();
+                    }
+                }
+
+                trans.Commit();
+                return phraseId;
+            }
+
+        }
+
+        internal static bool PhraseDelete(Guid id)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlTransaction trans = conn.BeginTransaction())
+            {
+                using (SqlCommand comm = new SqlCommand("DELETE phrase_words WHERE phrase_id = @phrase_id", conn))
+                {
+                    comm.Parameters.AddWithValue("@phrase_id", id);
+                    comm.ExecuteNonQuery();
+                }
+
+                using (SqlCommand comm = new SqlCommand("DELETE phrase WHERE phrase_id = @phrase_id", conn))
+                {
+                    comm.Parameters.AddWithValue("@phrase_id", id);
+                    comm.ExecuteNonQuery();
+                }
+
+                trans.Commit();
+                return true;
+            }
+        }
+
+        internal static Guid RelationAdd(string name, Guid relationType, Guid word1, Guid word2)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("INSERT INTO relation (relation_id, relation_type_id, relation_name, word1, word2) VALUES (@relation_id, @relation_type_id, @relation_name, @word1, @word2)", conn))
+            {
+                Guid relationId = Guid.NewGuid();
+
+                comm.Parameters.AddWithValue("@relation_id", relationId);
+                comm.Parameters.AddWithValue("@relation_type_id", relationType);
+                comm.Parameters.AddWithValue("@relation_name", name);
+                comm.Parameters.AddWithValue("@word1", word1);
+                comm.Parameters.AddWithValue("@word2", word2);
+                comm.ExecuteNonQuery();
+
+                return relationId;
+            }
+        }
+
+        internal static bool RelationDelete(Guid id)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("DELETE relation WHERE relation_id = @relation_id", conn))
+            {
+                comm.Parameters.AddWithValue("@relation_id", id);
+                comm.ExecuteNonQuery();
+
+                return true;
             }
         }
 

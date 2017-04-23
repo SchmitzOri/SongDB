@@ -1,7 +1,0 @@
-C:\Users\Tal\Source\Repos\SongDB\SongDB\SongService\bin\Debug\SongService.dll
-C:\Users\Tal\Source\Repos\SongDB\SongDB\SongService\bin\Debug\SongService.pdb
-C:\Users\Tal\Source\Repos\SongDB\SongDB\SongService\bin\Debug\CommonDTO.dll
-C:\Users\Tal\Source\Repos\SongDB\SongDB\SongService\bin\Debug\CommonDTO.pdb
-C:\Users\Tal\Source\Repos\SongDB\SongDB\SongService\obj\Debug\SongService.csprojResolveAssemblyReference.cache
-C:\Users\Tal\Source\Repos\SongDB\SongDB\SongService\obj\Debug\SongService.dll
-C:\Users\Tal\Source\Repos\SongDB\SongDB\SongService\obj\Debug\SongService.pdb

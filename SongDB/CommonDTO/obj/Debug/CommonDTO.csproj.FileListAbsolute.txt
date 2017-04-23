@@ -1,4 +1,0 @@
-C:\Users\Tal\Source\Repos\SongDB\SongDB\CommonDTO\bin\Debug\CommonDTO.dll
-C:\Users\Tal\Source\Repos\SongDB\SongDB\CommonDTO\bin\Debug\CommonDTO.pdb
-C:\Users\Tal\Source\Repos\SongDB\SongDB\CommonDTO\obj\Debug\CommonDTO.dll
-C:\Users\Tal\Source\Repos\SongDB\SongDB\CommonDTO\obj\Debug\CommonDTO.pdb

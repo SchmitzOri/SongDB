@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Phrase.cs" />
+    <Compile Include="Relation.cs" />
+    <Compile Include="Group.cs" />
     <Compile Include="Stats.cs" />
     <Compile Include="GetWords.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

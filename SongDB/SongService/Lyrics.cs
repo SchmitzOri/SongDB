@@ -12,34 +12,6 @@ namespace SongService
 
     public class Lyrics : ILyrics
     {
-        public string Hello(int x)
-        {
-            return x++.ToString();
-        }
-
-        public GetWordsResponse GetWords(GetWordsRequest request)
-        {
-            try
-            {
-                return DB.GetWords(request.SongId);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public GetStatsResponse GetStats(GetStatsRequest request)
-        {
-            try
-            {
-                return DB.GetStats();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
 
         public Guid UploadSong(Stream file)
         {
@@ -73,6 +45,156 @@ namespace SongService
             //return DB.AddSongLyrics(Artist, Name, Lyrics);
             //TODO: UploadMultipleSongs
             return Guid.Empty;
+        }
+
+        public GetWordsResponse GetWords(GetWordsRequest request)
+        {
+            try
+            {
+                return DB.GetWords(request.SongId);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public GetStatsResponse GetStats(GetStatsRequest request)
+        {
+            try
+            {
+                return DB.GetStats();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public GroupAddResponse GroupAdd(GroupAddRequest request)
+        {
+            try
+            {
+                return new GroupAddResponse()
+                {
+                    Id = DB.GroupAdd(request.Name),
+                };
+            }
+            catch (Exception)
+            {
+                return new GroupAddResponse()
+                {
+                    Id = Guid.Empty,
+                };
+            }
+        }
+
+        public GroupUpdateResponse GroupUpdate(GroupUpdateRequest request)
+        {
+            try
+            {
+                return new GroupUpdateResponse()
+                {
+                    Success = DB.GroupUpdate(request.Id, request.Name, request.Words),
+                };
+            }
+            catch (Exception)
+            {
+                return new GroupUpdateResponse()
+                {
+                    Success = false,
+                };
+            }
+        }
+
+        public GroupDeleteResponse GroupDelete(GroupDeleteRequest request)
+        {
+            try
+            {
+                return new GroupDeleteResponse()
+                {
+                    Success = DB.RelationDelete(request.Id),
+                };
+            }
+            catch (Exception)
+            {
+                return new GroupDeleteResponse()
+                {
+                    Success = false,
+                };
+            }
+        }
+
+        public RelationAddResponse RelationAdd(RelationAddRequest request)
+        {
+            try
+            {
+                return new RelationAddResponse()
+                {
+                    Id = DB.RelationAdd(request.Name, request.RelationType, request.Word1, request.Word2),
+                };
+            }
+            catch (Exception)
+            {
+                return new RelationAddResponse()
+                {
+                    Id = Guid.Empty,
+                };
+            }
+        }
+
+        public RelationDeleteResponse RelationDelete(RelationDeleteRequest request)
+        {
+            try
+            {
+                return new RelationDeleteResponse()
+                {
+                    Success = DB.RelationDelete(request.Id),
+                };
+            }
+            catch (Exception)
+            {
+                return new RelationDeleteResponse()
+                {
+                    Success = false,
+                };
+            }
+        }
+
+        public PhraseAddResponse PhraseAdd(PhraseAddRequest request)
+        {
+            try
+            {
+                return new PhraseAddResponse()
+                {
+                    Id = DB.PhraseAdd(request.Words),
+                };
+            }
+            catch (Exception)
+            {
+                return new PhraseAddResponse()
+                {
+                    Id = Guid.Empty,
+                };
+            }
+        }
+
+        public PhraseDeleteResponse PhraseDelete(PhraseDeleteRequest request)
+        {
+            try
+            {
+                return new PhraseDeleteResponse()
+                {
+                    Success = DB.PhraseDelete(request.Id),
+                };
+            }
+            catch (Exception)
+            {
+                return new PhraseDeleteResponse()
+                {
+                    Success = false,
+                };
+            }
         }
     }
 }
