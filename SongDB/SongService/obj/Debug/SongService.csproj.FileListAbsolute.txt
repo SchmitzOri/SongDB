@@ -5,3 +5,10 @@ c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\ob
 c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\obj\Debug\SongService.pdb
 c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\bin\Debug\CommonDTO.dll
 c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\SongService\bin\Debug\CommonDTO.pdb
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\SongService\bin\Debug\SongService.dll
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\SongService\bin\Debug\SongService.pdb
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\SongService\bin\Debug\CommonDTO.dll
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\SongService\bin\Debug\CommonDTO.pdb
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\SongService\obj\Debug\SongService.csprojResolveAssemblyReference.cache
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\SongService\obj\Debug\SongService.dll
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\SongService\obj\Debug\SongService.pdb
