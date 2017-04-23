@@ -8,3 +8,13 @@ c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\AppChecker\obj
 c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\AppChecker\obj\Debug\AppChecker.pdb
 c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\AppChecker\bin\Debug\CommonDTO.dll
 c:\users\ori schmitz\documents\visual studio 2017\Projects\SongDB\AppChecker\bin\Debug\CommonDTO.pdb
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\bin\Debug\AppChecker.exe.config
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\bin\Debug\AppChecker.exe
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\bin\Debug\AppChecker.pdb
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\bin\Debug\SongService.dll
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\bin\Debug\CommonDTO.dll
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\bin\Debug\SongService.pdb
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\bin\Debug\CommonDTO.pdb
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\obj\Debug\AppChecker.csprojResolveAssemblyReference.cache
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\obj\Debug\AppChecker.exe
+C:\Users\Ori Schmitz\Source\Repos\SongDB\SongDB\AppChecker\obj\Debug\AppChecker.pdb

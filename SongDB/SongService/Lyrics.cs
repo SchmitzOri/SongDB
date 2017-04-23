@@ -29,6 +29,18 @@ namespace SongService
             }
         }
 
+        public GetStatsResponse GetStats(GetStatsRequest request)
+        {
+            try
+            {
+                return new GetStatsResponse();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         public Guid UploadSong(Stream file)
         {
             string Artist = null;
