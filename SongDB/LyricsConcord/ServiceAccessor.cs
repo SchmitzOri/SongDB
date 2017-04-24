@@ -59,13 +59,17 @@ namespace LyricsConcord
             }
         }
 
-        public static Guid UploadSong(string songPath)
+        public static Guid UploadSong(byte[] fileContent)
         {
             try
             {
                 using (WebClient uploader = new WebClient())
                 {
-                    uploader.UploadFile(new Uri(ConfigurationManager.AppSettings["ServiceURL"] + "UploadSong"), songPath);
+                    //byte[] fileContents = File.ReadAllBytes(songPath);
+                    uploader.UploadData(new Uri(ConfigurationManager.AppSettings["ServiceURL"] + "UploadSong"), fileContent);
+
+                    //TODO: Delete old
+                    //uploader.UploadFile(new Uri(ConfigurationManager.AppSettings["ServiceURL"] + "UploadSong"), songPath);
 
                     return Guid.Empty;
                 }

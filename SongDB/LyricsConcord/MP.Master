@@ -47,6 +47,9 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
+                            <a href="Songs.aspx">Songs</a>
+                        </li>
+                        <li>
                             <a href="Words.aspx">Words</a>
                         </li>
                         <li>

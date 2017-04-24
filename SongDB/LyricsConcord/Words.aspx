@@ -1,6 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MP.Master" AutoEventWireup="true" CodeBehind="Words.aspx.cs" Inherits="LyricsConcord.Words" %>
+﻿<%@ page title="" language="C#" masterpagefile="~/MP.Master" autoeventwireup="true" codebehind="Words.aspx.cs" inherits="LyricsConcord.Words" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:content id="Content1" contentplaceholderid="ContentPlaceHolder1" runat="server">
     <div class="form-group">
         <label>Song</label>
         <select id="song_id" class="form-control">
@@ -23,9 +23,9 @@
         <tbody>
         </tbody>
     </table>
-</asp:Content>
+</asp:content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ScriptsPlaceHolder" runat="server">
+<asp:content id="Content2" contentplaceholderid="ScriptsPlaceHolder" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
             $('h1.page-header').text('Words');
@@ -63,4 +63,4 @@
             return false;
         });
     </script>
-</asp:Content>
+</asp:content>
