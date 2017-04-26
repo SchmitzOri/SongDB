@@ -20,6 +20,34 @@ namespace CommonDTO
     }
 
     [DataContract]
+    public class WordSongsRequest
+    {
+        [DataMember]
+        public Guid WordId { get; set; }
+    }
+
+    [DataContract]
+    public class WordSongsResponse
+    {
+        [DataMember]
+        public List<SongDTO> WordSongs { get; set; }
+    }
+
+    [DataContract]
+    public class SongLyricsRequest
+    {
+        [DataMember]
+        public Guid SongId { get; set; }
+    }
+
+    [DataContract]
+    public class SongLyricsResponse
+    {
+        [DataMember]
+        public string SongLyrics { get; set; }
+    }
+
+    [DataContract]
     public class SongDTO
     {
         [DataMember]
