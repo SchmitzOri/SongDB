@@ -64,6 +64,32 @@ namespace SongService
             }
         }
 
+        public WordSongsResponse WordSongs(WordSongsRequest request)
+        {
+            try
+            {
+                return DB.GetWordSongs(request.WordId);
+            }
+            catch (Exception ex)
+            {
+                var x = new WordSongsResponse() { WordSongs = new List<SongDTO>() };
+                x.WordSongs.Add(new SongDTO() { Id = Guid.Empty, Name = ex.ToString(), ArtistId = Guid.Empty });
+                return x;
+            }
+        }
+
+        public SongLyricsResponse SongLyrics(SongLyricsRequest request)
+        {
+            try
+            {
+                return DB.SongLyrics(request.SongId);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public GetStatsResponse GetStats(GetStatsRequest request)
         {
             try

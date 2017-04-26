@@ -22,6 +22,14 @@ namespace SongService
         GetWordsResponse GetWords(GetWordsRequest request);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "WordSongs")]
+        WordSongsResponse WordSongs(WordSongsRequest request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "SongLyrics")]
+        SongLyricsResponse SongLyrics(SongLyricsRequest request);
+
+        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "Songs")]
         SongsResponse Songs(SongsRequest request);
 

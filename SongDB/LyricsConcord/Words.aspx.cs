@@ -23,5 +23,17 @@ namespace LyricsConcord
         {
             return ServiceAccessor.MakeRequest<GetWordsRequest, GetWordsResponse>(new GetWordsRequest() { SongId = songId }, "GetWords").Words;
         }
+
+        [WebMethod]
+        public static object GetWordSongs(Guid wordId)
+        {
+            return ServiceAccessor.MakeRequest<WordSongsRequest, WordSongsResponse>(new WordSongsRequest() { WordId = wordId }, "WordSongs").WordSongs;
+        }
+
+        [WebMethod]
+        public static object GetSongLyrics(Guid songId)
+        {
+            return ServiceAccessor.MakeRequest<SongLyricsRequest, SongLyricsResponse>(new SongLyricsRequest() { SongId=songId}, "SongLyrics").SongLyrics;
+        }
     }
 }

@@ -63,6 +63,49 @@ namespace SongService
             }
         }
 
+        internal static WordSongsResponse GetWordSongs(Guid wordId)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                WordSongsResponse ret = new WordSongsResponse()
+                {
+                    WordSongs = new List<SongDTO>()
+                };
+
+                using (SqlCommand comm = new SqlCommand("SELECT DISTINCT s.song_id, song_name, artist_id " +
+                                                        "FROM song s " +
+                                                        "JOIN location l ON s.song_id = l.song_id " +
+                                                        "WHERE l.word_id = @word_id", conn))
+                {
+                    comm.Parameters.AddWithValue("@word_id", wordId);
+
+                    using (SqlDataReader dr = comm.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            ret.WordSongs.Add(new SongDTO()
+                            {
+                                Id = Guid.Parse(dr["song_id"].ToString()),
+                                Name = dr["song_name"].ToString(),
+                                ArtistId = Guid.Parse(dr["artist_id"].ToString())
+                            });                              
+                        }
+                    }
+                }
+
+                return ret;
+            }
+        }
+
+        internal static SongLyricsResponse SongLyrics(Guid songId)
+        {
+            SongLyricsResponse ret = new SongLyricsResponse();
+
+            ret.SongLyrics = File.ReadAllText(ConfigurationManager.AppSettings["LYRICS_FOLDER"] + songId.ToString() + ".txt");
+
+            return ret;
+        }
+
         internal static SongsResponse Songs()
         {
             using (SqlConnection conn = GetConnection())

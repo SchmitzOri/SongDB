@@ -131,6 +131,7 @@
     <Content Include="dist\js\sb-admin-2.js" />
     <Content Include="dist\js\sb-admin-2.min.js" />
     <Content Include="js\sb-admin-2.js" />
+    <Content Include="vendor\jquery\jquery.mark.min.js" />
     <Content Include="Words.aspx" />
     <Content Include="Stats.aspx" />
     <Content Include="vendor\bootstrap-social\bootstrap-social.css" />
