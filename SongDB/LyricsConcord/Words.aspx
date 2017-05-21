@@ -101,28 +101,26 @@
                 currentIndex += $(this).is($prevBtn) ? -1 : 1;
                 $nextBtn[0].disabled = false;
                 $prevBtn[0].disabled = false;
-                if (currentIndex < 0) {
-                    if ($('#song_id').val() != '' || currentSong == 0) {
+                if (currentIndex == 0 && ($('#song_id').val() != '' || currentSong == 0)) {
+                    $prevBtn[0].disabled = true;
+                } else if (currentIndex < 0) {
+                    prevSong();
+
+                    if (currentSong == 0 && currentIndex == 0) {
                         $prevBtn[0].disabled = true;
-                    } else {
-                        prevSong();
-
-                        if (currentSong == 0) {
-                            $prevBtn[0].disabled = true;
-                        }
                     }
                 }
-                if (currentIndex > $results.length - 1) {
-                    if ($('#song_id').val() != '' || currentSong + 1 == wordSongs.length) {
+                if (currentIndex == $results.length - 1 &&
+                    ($('#song_id').val() != '' || currentSong + 1 == wordSongs.length)) {
+                    $nextBtn[0].disabled = true;
+                } else if (currentIndex > $results.length - 1) {
+                    nextSong('');
+
+                    if (currentSong + 1 == wordSongs.length) {
                         $nextBtn[0].disabled = true;
-                    } else {
-                        nextSong('');
-
-                        if (currentSong + 1 == wordSongs.length) {
-                            $nextBtn[0].disabled = true;
-                        } 
-                    }
+                    } 
                 }
+                
                 jumpTo();
             }
         });
@@ -161,6 +159,8 @@
             wordSongs = null;
             currentSong = -1;
             currentIndex = 0;
+            $nextBtn[0].disabled = false;
+            $prevBtn[0].disabled = false;
         })
 
         var t = $('#table').DataTable({
@@ -210,7 +210,8 @@
                 return;
             }
 
-            songLyrics(songId, songName);
+            currentIndex = 0;
+            songLyrics(songId, songName, true);
         }
 
         function prevSong() {
@@ -225,10 +226,10 @@
                 return;
             }
 
-            songLyrics(songId, songName);
+            songLyrics(songId, songName, false);
         }
 
-        function songLyrics(songId, songName) {
+        function songLyrics(songId, songName, isNext) {
             var lyricsRequest = { songId: songId };
             $.ajax({
                 type: "POST",
@@ -248,16 +249,21 @@
                                 accuracy: "exactly",
                                 done: function () {
                                     $results = $content.find("mark");
-                                    currentIndex = 0;
+                                    if (isNext) {
+                                        currentIndex = 0;
+                                    } else {
+                                        currentIndex = $results.length - 1;
+                                    }
                                     jumpTo();
                                 }
                             });
                         }
                     });
 
-                    if (($('#song_id').val() != '' || currentSong == 0) && $results.length) {
+                    if ($('#song_id').val() != '' || (currentSong == 0 && currentIndex == 0)) {
                         $prevBtn[0].disabled = true;
-                        if ($('#song_id').val() != '' && currentIndex + 1 > $results.length - 1) {
+                        if (($('#song_id').val() != '' || currentSong == wordSongs.length - 1) &&
+                            currentIndex + 1 > $results.length - 1) {
                             $nextBtn[0].disabled = true;
                         }
                     }
