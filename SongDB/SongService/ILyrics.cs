@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
@@ -64,5 +65,13 @@ namespace SongService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "PhraseDelete")]
         PhraseDeleteResponse PhraseDelete(PhraseDeleteRequest request);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "ExportXML")]
+        Stream ExportXML();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "/ImportXML")]
+        bool ImportXML(Stream stream);
     }
 }
