@@ -21,7 +21,22 @@ namespace LyricsConcord
         [WebMethod]
         public static object GetLocations(Guid? songId)
         {
-            return ServiceAccessor.MakeRequest<LocationsRequest, LocationsResponse>(new LocationsRequest() { SongId = songId }, "Locations").Locations;
+            return ServiceAccessor.MakeRequest<LocationsRequest, 
+                LocationsResponse>(new LocationsRequest() { SongId = songId }, "Locations").Locations;
+        }
+
+        [WebMethod]
+        public static object GetWordByLocation(Guid songId, int numInSong, int verseNum, int lineInVerse)
+        {
+            return ServiceAccessor.MakeRequest<WordLocationRequest,LocationsResponse>(
+                new WordLocationRequest()
+                {
+                    SongId = songId,
+                    NumInSong = numInSong,
+                    VerseNum = verseNum,
+                    LineInVerse = lineInVerse
+                }, 
+                "WordByLocation").Locations;
         }
     }
 }

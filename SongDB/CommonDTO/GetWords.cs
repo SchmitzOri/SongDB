@@ -29,6 +29,19 @@ namespace CommonDTO
     }
 
     [DataContract]
+    public class WordLocationRequest
+    {
+        [DataMember]
+        public Guid SongId { get; set; }
+        [DataMember]
+        public int NumInSong { get; set; }
+        [DataMember]
+        public int VerseNum { get; set; }
+        [DataMember]
+        public int LineInVerse { get; set; }
+    }
+
+    [DataContract]
     public class LocationsResponse
     {
         [DataMember]

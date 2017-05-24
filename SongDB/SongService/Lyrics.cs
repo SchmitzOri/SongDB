@@ -95,6 +95,18 @@ namespace SongService
             }
         }
 
+        public LocationsResponse WordByLocation(WordLocationRequest request)
+        {
+            try
+            {
+                return DB.WordByLocation(request.SongId, request.NumInSong, request.VerseNum, request.LineInVerse);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public SongLyricsResponse SongLyrics(SongLyricsRequest request)
         {
             try
@@ -304,4 +316,3 @@ namespace SongService
         }
     }
 }
-
