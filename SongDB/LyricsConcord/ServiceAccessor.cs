@@ -53,7 +53,7 @@ namespace LyricsConcord
 
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return default(S);
             }
@@ -77,6 +77,23 @@ namespace LyricsConcord
             catch (Exception ex)
             {
                 return Guid.Empty;
+            }
+        }
+
+        public static bool UploadBackup(byte[] fileContent)
+        {
+            try
+            {
+                using (WebClient uploader = new WebClient())
+                {
+                    uploader.UploadData(new Uri(ConfigurationManager.AppSettings["ServiceURL"] + "ImportXML"), fileContent);
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 

@@ -1,10 +1,15 @@
 ﻿using CommonDTO;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.ServiceModel;
+using System.ServiceModel.Web;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -225,6 +230,64 @@ namespace SongService
                 {
                     Success = false,
                 };
+            }
+        }
+
+        public Stream ExportXML()
+        {
+            // Exporting all tables to xml files
+            DB.ExportTables(ConfigurationManager.AppSettings["EXPORT_FOLDER"]);
+
+            // Zipping all files
+            string zipFilePath = ConfigurationManager.AppSettings["ZIP_FOLDER"] + "DB.zip";
+            if (File.Exists(zipFilePath))
+            {
+                File.Delete(zipFilePath);
+            }
+
+            ZipFile.CreateFromDirectory(ConfigurationManager.AppSettings["EXPORT_FOLDER"], zipFilePath, CompressionLevel.Fastest, false);
+
+            // Returning zip stream
+            String headerInfo = "attachment; filename=DB.zip";
+            WebOperationContext.Current.OutgoingResponse.Headers["Content-Disposition"] = headerInfo;
+            WebOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
+
+            return File.OpenRead(zipFilePath);
+        }
+
+        public bool ImportXML(Stream stream)
+        {
+            try
+            {
+                // Save stream to file
+                string zipFilePath = ConfigurationManager.AppSettings["ZIP_FOLDER"] + "Import.zip";
+                if (File.Exists(zipFilePath))
+                {
+                    File.Delete(zipFilePath);
+                }
+
+                using (FileStream writer = new FileStream(zipFilePath, FileMode.Create))
+                {
+                    stream.CopyTo(writer);
+                }
+
+                // Clean export folder
+                System.IO.DirectoryInfo di = new DirectoryInfo(ConfigurationManager.AppSettings["EXPORT_FOLDER"]);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+
+                // Unzip to folder
+                ZipFile.ExtractToDirectory(zipFilePath, ConfigurationManager.AppSettings["EXPORT_FOLDER"]);
+
+                DB.ImportTables(ConfigurationManager.AppSettings["EXPORT_FOLDER"]);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommonDTO;
+using System.Data;
 
 namespace SongService
 {
@@ -88,7 +89,7 @@ namespace SongService
                                 Id = Guid.Parse(dr["song_id"].ToString()),
                                 Name = dr["song_name"].ToString(),
                                 ArtistId = Guid.Parse(dr["artist_id"].ToString())
-                            });                              
+                            });
                         }
                     }
                 }
@@ -466,6 +467,120 @@ namespace SongService
                 trans.Commit();
 
                 return songId;
+            }
+        }
+
+        internal static bool ExportTables(string folder)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                List<string> tables = new List<string>();
+                using (SqlCommand comm = new SqlCommand("SELECT name FROM sys.Tables", conn))
+                using (SqlDataReader dr = comm.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        tables.Add(dr["name"].ToString());
+                    }
+                }
+
+                foreach (string table in tables)
+                {
+                    using (SqlCommand comm = new SqlCommand("SELECT * FROM [" + table + "]", conn))
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter(comm);
+                        DataSet ds = new DataSet();
+                        da.Fill(ds);
+                        ds.Tables[0].WriteXml(folder + table + ".xml");
+                        ds.Tables[0].WriteXmlSchema(folder + table + ".xsd");
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        internal static bool ImportTables(string folder)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                // Get tables in order of dependency
+                List<string> tables = new List<string>();
+                using (SqlCommand comm = new SqlCommand("with cte (lvl,object_id,name) " +
+                                                                "as " +
+                                                                "(" +
+                                                                    "select      1 " +
+                                                                               ", object_id " +
+                                                                               ", name " +
+                                                                    "from sys.tables " +
+                                                                    "where type_desc = 'USER_TABLE' " +
+                                                                            "and is_ms_shipped = 0 " +
+                                                                    "union all " +
+                                                                    "select      cte.lvl + 1 " +
+                                                                               ", t.object_id " +
+                                                                               ", t.name " +
+                                                                    "from cte " +
+                                                                    "join sys.tables  as t " +
+                                                                                "on exists " +
+                                                                                            "(" +
+                                                                                                "select null " +
+                                                                                                "from sys.foreign_keys    as fk " +
+                                                                                                "where fk.parent_object_id = t.object_id " +
+                                                                                                        "and fk.referenced_object_id = cte.object_id " +
+                                                                                            ") " +
+                                                                                        "and t.object_id<> cte.object_id " +
+                                                                                       "and cte.lvl < 30 " +
+                                                                    "where t.type_desc = 'USER_TABLE' " +
+                                                                            "and t.is_ms_shipped = 0 " +
+                                                                ") " +
+                                                    "select name " +
+                                                               ", max (lvl)   as dependency_level " +
+                                                    "from cte " +
+                                                    "group by name " +
+                                                    "order by    dependency_level, name", conn))
+                using (SqlDataReader dr = comm.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        tables.Add(dr["name"].ToString());
+                    }
+                }
+
+                // Reverse table depdendency order
+                tables.Reverse();
+
+                // Delete old data
+                foreach (string table in tables)
+                {
+                    using (SqlCommand comm = new SqlCommand("DELETE [" + table + "]", conn))
+                    {
+                        comm.ExecuteNonQuery();
+                    }
+                }
+                
+                // Reverse table depdendency order
+                tables.Reverse();
+
+                // Import data
+                foreach (string table in tables)
+                {
+                    DataSet reportData = new DataSet();
+                    reportData.ReadXmlSchema(folder + table + ".xsd");
+                    reportData.ReadXml(folder + table + ".xml");
+
+                    using (SqlBulkCopy sbc = new SqlBulkCopy(conn))
+                    {
+                        //foreach (DataColumn dcPrepped in reportData.Tables[0].Columns)
+                        //{
+                        //    sbc.ColumnMappings.Add(dcPrepped.ColumnName, dcPrepped.ColumnName);
+                        //}
+
+                        sbc.DestinationTableName = "[" + table + "]";
+                        sbc.WriteToServer(reportData.Tables[0]);
+                    }
+                }
+
+                return true;
             }
         }
     }

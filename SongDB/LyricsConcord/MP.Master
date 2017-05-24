@@ -55,6 +55,9 @@
                         <li>
                             <a href="Stats.aspx">Statistics</a>
                         </li>
+                        <li>
+                            <a href="Export.aspx">Import/Export Database</a>
+                        </li>
                     </ul>
                 </div>
             </div>
