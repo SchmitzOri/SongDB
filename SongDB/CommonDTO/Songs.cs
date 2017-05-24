@@ -10,6 +10,10 @@ namespace CommonDTO
     [DataContract]
     public class SongsRequest
     {
+        [DataMember]
+        public string PartSongName { get; set; }
+        [DataMember]
+        public string PartArtistName { get; set; }
     }
 
     [DataContract]
@@ -56,5 +60,7 @@ namespace CommonDTO
         public string Name { get; set; }
         [DataMember]
         public Guid ArtistId { get; set; }
+        [DataMember]
+        public string ArtistName { get; set; }
     }
 }

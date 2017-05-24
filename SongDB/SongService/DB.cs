@@ -106,28 +106,40 @@ namespace SongService
             return ret;
         }
 
-        internal static SongsResponse Songs()
+        internal static SongsResponse Songs(string partSongName, string partArtistName)
         {
             using (SqlConnection conn = GetConnection())
-            using (SqlCommand comm = new SqlCommand("SELECT song_id,song_name, artist_id FROM song", conn))
-            using (SqlDataReader dr = comm.ExecuteReader())
             {
                 SongsResponse ret = new SongsResponse()
                 {
                     Songs = new List<SongDTO>(),
                 };
 
-                while (dr.Read())
+                using (SqlCommand comm = new SqlCommand("SELECT song_id, song_name, a.artist_id, a.artist_name " +
+                                                        "FROM song s " +
+                                                        "JOIN artist a ON a.artist_id = s.artist_id " +
+                                                        "WHERE s.song_name LIKE @part_name AND " +
+                                                        "a.artist_name LIKE @part_artist", conn))
                 {
-                    ret.Songs.Add(new SongDTO()
-                    {
-                        ArtistId = Guid.Parse(dr["artist_id"].ToString()),
-                        Id = Guid.Parse(dr["song_id"].ToString()),
-                        Name = dr["song_name"].ToString()
-                    });
-                }
+                    comm.Parameters.AddWithValue("@part_name", "%" + partSongName + "%");
+                    comm.Parameters.AddWithValue("@part_artist", "%" + partArtistName + "%");
 
-                return ret;
+                    using (SqlDataReader dr = comm.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            ret.Songs.Add(new SongDTO()
+                            {
+                                ArtistId = Guid.Parse(dr["artist_id"].ToString()),
+                                Id = Guid.Parse(dr["song_id"].ToString()),
+                                Name = dr["song_name"].ToString(),
+                                ArtistName = dr["artist_name"].ToString()
+                            });
+                        }
+
+                        return ret;
+                    }
+                }
             }
         }
 

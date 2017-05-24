@@ -42,9 +42,9 @@ namespace SongService
         {
             try
             {
-                return DB.Songs();
+                return DB.Songs(request.PartSongName, request.PartArtistName);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }

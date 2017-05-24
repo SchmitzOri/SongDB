@@ -17,7 +17,7 @@ namespace LyricsConcord
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            songs = ServiceAccessor.MakeRequest<SongsRequest, SongsResponse>(new SongsRequest(), "Songs");
+            songs = ServiceAccessor.MakeRequest<SongsRequest, SongsResponse>(new SongsRequest() { PartSongName="", PartArtistName=""}, "Songs");
         }
 
         // TODO: Ajax doesn't work. Check Why
@@ -62,6 +62,11 @@ namespace LyricsConcord
             }
 
         }
-        
+
+        [WebMethod]
+        public static object GetSongs(string partSongName, string partAritstName)
+        {
+            return ServiceAccessor.MakeRequest<SongsRequest, SongsResponse>(new SongsRequest() { PartSongName=partSongName, PartArtistName=partAritstName }, "Songs").Songs;
+        }
     }
 }
