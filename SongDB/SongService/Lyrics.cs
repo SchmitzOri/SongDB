@@ -83,6 +83,18 @@ namespace SongService
             }
         }
 
+        public LocationsResponse Locations(LocationsRequest request)
+        {
+            try
+            {
+                return DB.Locations(request.SongId);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public SongLyricsResponse SongLyrics(SongLyricsRequest request)
         {
             try

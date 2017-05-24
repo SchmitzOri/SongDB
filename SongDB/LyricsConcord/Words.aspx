@@ -2,7 +2,7 @@
 
 <asp:content id="Content1" contentplaceholderid="ContentPlaceHolder1" runat="server">
     <div class="form-group">
-        <label>Song</label>
+        <label>Choose song</label>
         <select id="song_id" class="form-control">
             <option value="">All...</option>
             <%foreach (var item in songs.Songs)
@@ -40,20 +40,28 @@
     </div>
 
     <style type="text/css">
-    mark {
-      background: yellow;
-    }
+        mark {
+          background: yellow;
+        }
 
-    mark.current {
-      background: orange;
-    }
+        mark.current {
+          background: orange;
+        }
     </style>
 </asp:content>
 <asp:content id="Content2" contentplaceholderid="ScriptsPlaceHolder" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
-            $('h1.page-header').text('Words');
+            $('h1.page-header').text('Words Context');
             $('#song_id').change();
+        });
+
+        var t = $('#table').DataTable({
+            "columnDefs": [
+                { "visible": false, "targets": 0 }
+            ],
+            pageLength: 25,
+            ordering: false
         });
 
         var word = null,
@@ -162,14 +170,6 @@
             $nextBtn[0].disabled = false;
             $prevBtn[0].disabled = false;
         })
-
-        var t = $('#table').DataTable({
-            "columnDefs": [
-                { "visible": false, "targets": 0 }
-            ],
-            pageLength: 25,
-            ordering: false
-        });
 
         $('#song_id').on('change', function () {
             var jsonRequest = { songId: null };

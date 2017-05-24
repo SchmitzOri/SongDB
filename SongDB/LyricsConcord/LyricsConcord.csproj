@@ -133,6 +133,7 @@
     <Content Include="dist\js\sb-admin-2.min.js" />
     <Content Include="js\sb-admin-2.js" />
     <Content Include="vendor\jquery\jquery.mark.min.js" />
+    <Content Include="WordsIndex.aspx" />
     <Content Include="Words.aspx" />
     <Content Include="Stats.aspx" />
     <Content Include="vendor\bootstrap-social\bootstrap-social.css" />
@@ -251,6 +252,13 @@
     </Compile>
     <Compile Include="Songs.aspx.designer.cs">
       <DependentUpon>Songs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WordsIndex.aspx.cs">
+      <DependentUpon>WordsIndex.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WordsIndex.aspx.designer.cs">
+      <DependentUpon>WordsIndex.aspx</DependentUpon>
     </Compile>
     <Compile Include="Words.aspx.cs">
       <DependentUpon>Words.aspx</DependentUpon>

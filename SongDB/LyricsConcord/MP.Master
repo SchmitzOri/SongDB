@@ -50,7 +50,15 @@
                             <a href="Songs.aspx">Songs</a>
                         </li>
                         <li>
-                            <a href="Words.aspx">Words</a>
+                            <a href="#">Words<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="Words.aspx">Context</a>
+                                </li>
+                                <li>
+                                    <a href="WordsIndex.aspx">Index</a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <a href="Stats.aspx">Statistics</a>

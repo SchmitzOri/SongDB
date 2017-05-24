@@ -64,6 +64,54 @@ namespace SongService
             }
         }
 
+        internal static LocationsResponse Locations(Guid? songId)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                LocationsResponse ret = new LocationsResponse()
+                {
+                    Locations = new List<LocationDTO>()
+                };
+
+                string command = "SELECT location_id, s.song_name, w.word, word_number_in_file, " +
+                                    "verse_number, row_in_verse " +
+                                 "FROM location l " +
+                                 "JOIN song s ON s.song_id = l.song_id " +
+                                 "JOIN word w ON w.word_id = l.word_id";
+
+                if (songId.HasValue)
+                {
+                    command += " WHERE l.song_id = @song_id";
+                }
+
+                using (SqlCommand comm = new SqlCommand(command, conn))
+                {
+                    if (songId.HasValue)
+                    {
+                        comm.Parameters.AddWithValue("@song_id", songId);
+                    }
+
+                    using (SqlDataReader dr = comm.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            ret.Locations.Add(new LocationDTO()
+                            {
+                                Id = Guid.Parse(dr["location_id"].ToString()),
+                                Word = dr["word"].ToString(),
+                                Song = dr["song_name"].ToString(),
+                                NumberInSong = int.Parse(dr["word_number_in_file"].ToString()),
+                                VerseNumber = int.Parse(dr["verse_number"].ToString()),
+                                LineInVerse = int.Parse(dr["row_in_verse"].ToString())
+                            });
+                        }
+
+                        return ret;
+                    }
+                }
+            }
+        }
+
         internal static WordSongsResponse GetWordSongs(Guid wordId)
         {
             using (SqlConnection conn = GetConnection())
