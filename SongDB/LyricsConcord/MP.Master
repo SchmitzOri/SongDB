@@ -50,6 +50,9 @@
                             <a href="Songs.aspx">Songs</a>
                         </li>
                         <li>
+                            <a href="Groups.aspx">Groups</a>
+                        </li>
+                        <li>
                             <a href="#">Words<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
@@ -100,6 +103,7 @@
     <script src="../vendor/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
     <script src="../vendor/datatables-responsive/dataTables.responsive.js"></script>
+    <script src="../vendor/bootbox/bootbox.min.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
     <asp:ContentPlaceHolder ID="ScriptsPlaceHolder" runat="server">

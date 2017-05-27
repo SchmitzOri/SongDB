@@ -71,7 +71,9 @@
     <Content Include="less\sb-admin-2.less" />
     <Content Include="less\variables.less" />
     <Content Include="Export.aspx" />
+    <Content Include="Groups.aspx" />
     <Content Include="Songs.aspx" />
+    <Content Include="vendor\bootbox\bootbox.min.js" />
     <Content Include="vendor\bootstrap-social\bootstrap-social.less" />
     <Content Include="vendor\bootstrap-social\bootstrap-social.scss" />
     <Content Include="vendor\bootstrap\fonts\glyphicons-halflings-regular.eot" />
@@ -245,6 +247,13 @@
     </Compile>
     <Compile Include="Export.aspx.designer.cs">
       <DependentUpon>Export.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Groups.aspx.cs">
+      <DependentUpon>Groups.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Groups.aspx.designer.cs">
+      <DependentUpon>Groups.aspx</DependentUpon>
     </Compile>
     <Compile Include="Songs.aspx.cs">
       <DependentUpon>Songs.aspx</DependentUpon>

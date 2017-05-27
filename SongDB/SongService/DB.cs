@@ -277,7 +277,7 @@ namespace SongService
             using (SqlTransaction trans = conn.BeginTransaction())
             {
                 Guid groupId = Guid.NewGuid();
-                using (SqlCommand comm = new SqlCommand("INSERT INTO group (group_id, group_name) VALUES (@group_id, @group_name)", conn))
+                using (SqlCommand comm = new SqlCommand("INSERT INTO [group] (group_id, group_name) VALUES (@group_id, @group_name)", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@group_id", groupId);
                     comm.Parameters.AddWithValue("@group_name", name);
@@ -307,7 +307,7 @@ namespace SongService
             using (SqlConnection conn = GetConnection())
             using (SqlTransaction trans = conn.BeginTransaction())
             {
-                using (SqlCommand comm = new SqlCommand("DELETE group_words WHERE group_id = @group_id", conn))
+                using (SqlCommand comm = new SqlCommand("DELETE group_words WHERE group_id = @group_id", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@group_id", id);
                     comm.ExecuteNonQuery();
@@ -316,7 +316,7 @@ namespace SongService
                 foreach (string word in words)
                 {
                     Guid wordId = WordGetIdOrAdd(word, trans);
-                    using (SqlCommand comm = new SqlCommand("INSERT INTO group_words (group_id, word_id) VALUES (@group_id, @word_id)", conn))
+                    using (SqlCommand comm = new SqlCommand("INSERT INTO group_words (group_id, word_id) VALUES (@group_id, @word_id)", conn, trans))
                     {
                         comm.Parameters.AddWithValue("@group_id", id);
                         comm.Parameters.AddWithValue("@word_id", wordId);
@@ -324,7 +324,7 @@ namespace SongService
                     }
                 }
 
-                using (SqlCommand comm = new SqlCommand("UPDATE group SET group_name = @group_name WHERE group_id = @group_id", conn))
+                using (SqlCommand comm = new SqlCommand("UPDATE group SET group_name = @group_name WHERE group_id = @group_id", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@group_id", id);
                     comm.Parameters.AddWithValue("@group_name", name);

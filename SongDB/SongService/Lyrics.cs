@@ -173,7 +173,7 @@ namespace SongService
                     Id = DB.GroupAdd(request.Name, request.Words),
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new GroupAddResponse()
                 {
