@@ -65,11 +65,24 @@ namespace LyricsConcord
             {
                 using (WebClient uploader = new WebClient())
                 {
-                    //byte[] fileContents = File.ReadAllBytes(songPath);
                     uploader.UploadData(new Uri(ConfigurationManager.AppSettings["ServiceURL"] + "UploadSong"), fileContent);
 
-                    //TODO: Delete old
-                    //uploader.UploadFile(new Uri(ConfigurationManager.AppSettings["ServiceURL"] + "UploadSong"), songPath);
+                    return Guid.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                return Guid.Empty;
+            }
+        }
+
+        public static Guid UploadMultipleSongs(byte[] fileContent)
+        {
+            try
+            {
+                using (WebClient uploader = new WebClient())
+                {
+                    uploader.UploadData(new Uri(ConfigurationManager.AppSettings["ServiceURL"] + "UploadMultipleSongs"), fileContent);
 
                     return Guid.Empty;
                 }
@@ -96,6 +109,5 @@ namespace LyricsConcord
                 return false;
             }
         }
-
     }
 }
