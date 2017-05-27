@@ -302,6 +302,21 @@ namespace SongService
             }
         }
 
+        public PhraseAllResponse PhraseAll(PhraseAllRequest request)
+        {
+            try
+            {
+                return new PhraseAllResponse()
+                {
+                    Phrases = DB.PhraseGetAll(),
+                };
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public PhraseDeleteResponse PhraseDelete(PhraseDeleteRequest request)
         {
             try

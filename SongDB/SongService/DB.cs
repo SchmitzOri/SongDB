@@ -401,14 +401,14 @@ namespace SongService
             }
         }
 
-        internal static Guid PhraseAdd(List<Guid> words)
+        internal static Guid PhraseAdd(List<string> words)
         {
             using (SqlConnection conn = GetConnection())
             using (SqlTransaction trans = conn.BeginTransaction())
             {
                 Guid phraseId = Guid.NewGuid();
 
-                using (SqlCommand comm = new SqlCommand("INSERT INTO phrase (phrase_id) VALUES (@phrase_id)", conn))
+                using (SqlCommand comm = new SqlCommand("INSERT INTO phrase (phrase_id) VALUES (@phrase_id)", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@phrase_id", phraseId);
                     comm.ExecuteNonQuery();
@@ -416,10 +416,11 @@ namespace SongService
 
                 for (int i = 1; i <= words.Count; i++)
                 {
-                    using (SqlCommand comm = new SqlCommand("INSERT INTO phrase_words (phrase_id, word_id, order_index) VALUES (@phrase_id, @word_id, @order_index)", conn))
+                    Guid wordId = WordGetIdOrAdd(words[i], trans);
+                    using (SqlCommand comm = new SqlCommand("INSERT INTO phrase_words (phrase_id, word_id, order_index) VALUES (@phrase_id, @word_id, @order_index)", conn, trans))
                     {
                         comm.Parameters.AddWithValue("@phrase_id", phraseId);
-                        comm.Parameters.AddWithValue("@word_id", words[i]);
+                        comm.Parameters.AddWithValue("@word_id", wordId);
                         comm.Parameters.AddWithValue("@order_index", i);
 
                         comm.ExecuteNonQuery();
@@ -429,7 +430,6 @@ namespace SongService
                 trans.Commit();
                 return phraseId;
             }
-
         }
 
         internal static bool PhraseDelete(Guid id)
@@ -451,6 +451,33 @@ namespace SongService
 
                 trans.Commit();
                 return true;
+            }
+        }
+
+        internal static List<string> PhraseGetAll()
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("SELECT phrase_id, word " +
+                                                    "FROM phrase_words pw " +
+                                                    "JOIN word w ON pw.word_id = w.word " +
+                                                    "ORDER BY phrase_id, order_index ASC", conn))
+            using (SqlDataReader dr = comm.ExecuteReader())
+            {
+                Dictionary<Guid, string> ret = new Dictionary<Guid, string>();
+                while (dr.Read())
+                {
+                    Guid phraseId = Guid.Parse(dr["phrase_id"].ToString());
+                    if (ret.ContainsKey(phraseId))
+                    {
+                        ret[phraseId] += " " + dr["word"].ToString();
+                    }
+                    else
+                    {
+                        ret.Add(phraseId, dr["word"].ToString());
+                    }
+                }
+
+                return ret.Values.ToList();
             }
         }
 
