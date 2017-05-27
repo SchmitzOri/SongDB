@@ -16,6 +16,7 @@ namespace LyricsConcord
         protected void Page_Load(object sender, EventArgs e)
         {
             songs = ServiceAccessor.MakeRequest<SongsRequest, SongsResponse>(new SongsRequest(), "Songs");
+
         }
 
         [WebMethod]

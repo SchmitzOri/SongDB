@@ -21,13 +21,7 @@ namespace LyricsConcord
         [WebMethod]
         public static object UploadFile(object file)
         {
-            //HttpContext.Current.Request.Files;
             byte[] backupData = null;
-
-            //using (var binaryReader = new System.IO.BinaryReader(file))
-            //{
-            //    //backupData = file.
-            //}
 
             return ServiceAccessor.UploadBackup(backupData);
         }
@@ -45,15 +39,18 @@ namespace LyricsConcord
                     }
 
                     ServiceAccessor.UploadBackup(backupData);
+                    // TODO: label
                     Response.Write("The file has been uploaded.");
                 }
                 catch (Exception ex)
                 {
+                    // TODO: label
                     Response.Write("Error: " + ex.Message);
                 }
             }
             else
             {
+                // TODO: Label
                 Response.Write("Please select a file to upload.");
             }
         }

@@ -7,6 +7,9 @@
         <input type="submit" id="Submit1" name="Submit1" value="Upload" runat="server" onserverclick="Submit1_ServerClick">
         <br />
         <label id="successMsg" name="successMsg" runat="server" hidden>The file has been uploaded</label>
+        <div class="alert alert-success">
+            The file has been uploaded
+        </div>
     </form>
     <!-- Ajax doesn't work. Check Why
         <div class="form-group">
@@ -62,10 +65,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('h1.page-header').text('Songs');
-        });
-
-        $('#successMsg').on('show', function () {
-            $('#successMsg').fadeOut("slow", "linear");
+            $('#successMsg').attr('hidden', "hidden");
         });
 
         var t = $('#table').DataTable({

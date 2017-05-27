@@ -2,14 +2,25 @@
 
 <asp:content id="Content1" contentplaceholderid="ContentPlaceHolder1" runat="server">
     <div class="form-group">
-        <label>Choose song</label>
-        <select id="song_id" class="form-control">
-            <option value="">All...</option>
-            <%foreach (var item in songs.Songs)
-                {%>
-            <option value="<%:item.Id %>"><%:item.Name %></option>
-            <%} %>
-        </select>
+        <div class="radio">
+            <label style="display:inline-block; margin-right:10px">
+                <input type="radio" name="optionsRadios" id="optionSong" value="song" checked>Choose song
+            </label>
+            <div style="display:inline-block">
+                <select id="song_id" class="form-control">
+                    <option value="">All...</option>
+                    <%foreach (var item in songs.Songs)
+                        {%>
+                    <option value="<%:item.Id %>"><%:item.Name %></option>
+                    <%} %>
+                </select>
+            </div>
+        </div>
+        <div class="radio">
+            <label style="display:inline-block; margin-right:10px">
+                <input type="radio" name="optionsRadios" id="optionGroup" value="group">Choose group
+            </label>
+        </div>
     </div>
     <table class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline" id="table" role="grid" aria-describedby="dataTables-words">
         <thead>
