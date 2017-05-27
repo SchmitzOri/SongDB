@@ -19,6 +19,10 @@ namespace SongService
         UploadSongResponse UploadSong(Stream file);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "UploadMultipleSongs")]
+        List<UploadSongResponse> UploadMultipleSongs(Stream stream);
+
+        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetWords")]
         GetWordsResponse GetWords(GetWordsRequest request);
 
