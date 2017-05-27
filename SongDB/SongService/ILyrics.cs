@@ -94,6 +94,10 @@ namespace SongService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "PhraseAll")]
         PhraseAllResponse PhraseAll(PhraseAllRequest request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "PhraseLocations")]
+        PhraseLocationResponse PhraseLocations(PhraseLocationRequest request);
         #endregion
 
         #region ExportImport
@@ -103,7 +107,7 @@ namespace SongService
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/ImportXML")]
-        bool ImportXML(Stream stream); 
+        bool ImportXML(Stream stream);
         #endregion
     }
 }

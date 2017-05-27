@@ -23,5 +23,7 @@ namespace CommonDTO
         public decimal RowsInVerse{ get; set; }
         [DataMember]
         public decimal VersesInSongs { get; set; }
+        [DataMember]
+        public List<Tuple<int, string>> WordCloud { get; set; }
     }
 }

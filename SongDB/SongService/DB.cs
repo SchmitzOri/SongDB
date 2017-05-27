@@ -270,7 +270,6 @@ namespace SongService
             return wordId;
         }
 
-
         internal static Guid GroupAdd(string name, List<string> words)
         {
             using (SqlConnection conn = GetConnection())
@@ -454,7 +453,7 @@ namespace SongService
             }
         }
 
-        internal static List<string> PhraseGetAll()
+        internal static List<PhraseDTO> PhraseGetAll()
         {
             using (SqlConnection conn = GetConnection())
             using (SqlCommand comm = new SqlCommand("SELECT phrase_id, word " +
@@ -477,7 +476,46 @@ namespace SongService
                     }
                 }
 
-                return ret.Values.ToList();
+                return ret.Keys.Select(id => new PhraseDTO() { PhraseId = id, Phrase = ret[id] }).ToList();
+            }
+        }
+
+        internal static List<PhraseLocation> PhraseLocations(string phrase)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand())
+            {
+                string[] words = phrase.Split(' ');
+                List<string> joinClause = new List<string>(words.Length);
+                List<string> whereClause = new List<string>(words.Length);
+                for (int i = 0; i < words.Length; i++)
+                {
+                    joinClause.Add(" JOIN location l" + i + " ON (l" + i + ".song_id = s.song_id AND l" + i + ".word_number_in_file - " + i + " = l0.word_number_in_file) " +
+                                   "JOIN word w" + i + " ON(w" + i + ".word_id = l" + i + ".word_id) ");
+                    whereClause.Add(" w" + i + ".word = @w" + i);
+                    comm.Parameters.AddWithValue("@w" + i, words[i]);
+                }
+                comm.Connection = conn;
+                comm.CommandText = "SELECT s.song_id, s.song_name, l0.word_number_in_file " +
+                    "FROM song s " +
+                    string.Join(" ", joinClause) +
+                    " WHERE " + string.Join(" AND ", whereClause);
+
+                using (SqlDataReader dr = comm.ExecuteReader())
+                {
+                    List<PhraseLocation> ret = new List<PhraseLocation>();
+                    while (dr.Read())
+                    {
+                        ret.Add(new PhraseLocation()
+                        {
+                            SongId = Guid.Parse(dr["song_id"].ToString()),
+                            SongName = dr["song_name"].ToString(),
+                            WordNumberInFile = Convert.ToInt32(dr["word_number_in_file"]),
+                        });
+                    }
+
+                    return ret;
+                }
             }
         }
 
@@ -514,24 +552,47 @@ namespace SongService
         internal static GetStatsResponse GetStats()
         {
             using (SqlConnection conn = GetConnection())
-            using (SqlCommand comm = new SqlCommand("SELECT CASE num_of_rows WHEN 0 THEN 0 ELSE (num_of_characters / num_of_words) END chars_per_word, " +
-                                                    "CASE num_of_rows WHEN 0 THEN 0 ELSE(num_of_words / num_of_rows) END words_in_row, " +
-                                                    "CASE num_of_verses WHEN 0 THEN 0 ELSE(num_of_rows / num_of_verses) END rows_in_verse, " +
-                                                    "CASE num_of_songs WHEN 0 THEN 0 ELSE(num_of_verses / num_of_songs) END verses_in_songs " +
-                                                    "FROM stats", conn))
-            using (SqlDataReader dr = comm.ExecuteReader())
             {
-                if (dr.Read())
+                GetStatsResponse ret;
+                using (SqlCommand comm = new SqlCommand("SELECT CASE num_of_rows WHEN 0 THEN 0 ELSE (num_of_characters / num_of_words) END chars_per_word, " +
+                                                        "CASE num_of_rows WHEN 0 THEN 0 ELSE(num_of_words / num_of_rows) END words_in_row, " +
+                                                        "CASE num_of_verses WHEN 0 THEN 0 ELSE(num_of_rows / num_of_verses) END rows_in_verse, " +
+                                                        "CASE num_of_songs WHEN 0 THEN 0 ELSE(num_of_verses / num_of_songs) END verses_in_songs " +
+                                                        "FROM stats", conn))
+                using (SqlDataReader dr = comm.ExecuteReader())
                 {
-                    return new GetStatsResponse()
+                    if (dr.Read())
                     {
-                        CharsPerWord = Convert.ToDecimal(dr["chars_per_word"]),
-                        RowsInVerse = Convert.ToDecimal(dr["rows_in_verse"]),
-                        VersesInSongs = Convert.ToDecimal(dr["verses_in_songs"]),
-                        WordsInRow = Convert.ToDecimal(dr["words_in_row"]),
-                    };
+                        ret = new GetStatsResponse()
+                        {
+                            CharsPerWord = Convert.ToDecimal(dr["chars_per_word"]),
+                            RowsInVerse = Convert.ToDecimal(dr["rows_in_verse"]),
+                            VersesInSongs = Convert.ToDecimal(dr["verses_in_songs"]),
+                            WordsInRow = Convert.ToDecimal(dr["words_in_row"]),
+                            WordCloud = new List<Tuple<int, string>>(),
+                        };
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                return null;
+
+                using (SqlCommand comm = new SqlCommand("SELECT TOP 100 w.word, COUNT(*) count " +
+                                                        "FROM word w " +
+                                                        "JOIN location l ON w.word_id = l.word_id " +
+                                                        "GROUP BY w.word_id, w.word " +
+                                                        "ORDER BY count DESC", conn))
+                using (SqlDataReader dr = comm.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        ret.WordCloud.Add(new Tuple<int, string>(Convert.ToInt32(dr["count"]), dr["word"].ToString()));
+
+                    }
+                }
+
+                return ret;
             }
         }
 
@@ -609,7 +670,7 @@ namespace SongService
                     }
                     else
                     {
-                        foreach (var word in row.Split(' '))
+                        foreach (var word in row.Trim().Split(' '))
                         {
                             // Insert word
                             Guid wordId = WordGetIdOrAdd(word, trans);
