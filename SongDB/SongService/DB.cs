@@ -112,7 +112,7 @@ namespace SongService
             }
         }
 
-        internal static LocationsResponse WordByLocation(Guid songId, int numInSong, 
+        internal static LocationsResponse WordByLocation(Guid songId, int numInSong,
             int verseNum, int lineInVerse)
         {
             using (SqlConnection conn = GetConnection())
@@ -540,6 +540,19 @@ namespace SongService
                 #endregion
 
                 #region Statistics
+                int count = 0;
+                using (SqlCommand comm = new SqlCommand("SELECT COUNT(*) FROM stats", conn, trans))
+                {
+                    count = Convert.ToInt32(comm.ExecuteScalar());
+                }
+
+                if (count == 0)
+                {
+                    using (SqlCommand comm = new SqlCommand("INSERT INTO stats ([num_of_characters], [num_of_words], [num_of_rows], [num_of_verses], [num_of_songs]) VALUES (0, 0, 0, 0, 0)", conn, trans))
+                    {
+                        comm.ExecuteNonQuery();
+                    }
+                }
 
                 using (SqlCommand comm = new SqlCommand("UPDATE stats SET num_of_characters = num_of_characters + @num_of_characters, num_of_words = num_of_words + @num_of_words, num_of_rows = num_of_rows + @num_of_rows, num_of_verses = num_of_verses + @num_of_verses, num_of_songs = num_of_songs + 1", conn, trans))
                 {
@@ -652,7 +665,7 @@ namespace SongService
                         comm.ExecuteNonQuery();
                     }
                 }
-                
+
                 // Reverse table depdendency order
                 tables.Reverse();
 
@@ -665,11 +678,6 @@ namespace SongService
 
                     using (SqlBulkCopy sbc = new SqlBulkCopy(conn))
                     {
-                        //foreach (DataColumn dcPrepped in reportData.Tables[0].Columns)
-                        //{
-                        //    sbc.ColumnMappings.Add(dcPrepped.ColumnName, dcPrepped.ColumnName);
-                        //}
-
                         sbc.DestinationTableName = "[" + table + "]";
                         sbc.WriteToServer(reportData.Tables[0]);
                     }
