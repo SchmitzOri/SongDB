@@ -324,7 +324,7 @@ namespace SongService
                     }
                 }
 
-                using (SqlCommand comm = new SqlCommand("UPDATE group SET group_name = @group_name WHERE group_id = @group_id", conn, trans))
+                using (SqlCommand comm = new SqlCommand("UPDATE [group] SET group_name = @group_name WHERE group_id = @group_id", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@group_id", id);
                     comm.Parameters.AddWithValue("@group_name", name);
@@ -384,27 +384,31 @@ namespace SongService
             using (SqlConnection conn = GetConnection())
             using (SqlCommand comm = new SqlCommand("SELECT w.word, w.word_id " +
                                                     "FROM group_words gw " +
-                                                    "JOIN word w ON w.word_id = gw.word_id", conn))
-            using (SqlDataReader dr = comm.ExecuteReader())
+                                                    "JOIN word w ON w.word_id = gw.word_id " +
+                                                    "WHERE group_id = @groupId", conn))
             {
-                List<Tuple<Guid, string>> ret = new List<Tuple<Guid, string>>();
-                while (dr.Read())
+                comm.Parameters.AddWithValue("@groupId", groupId);
+                using (SqlDataReader dr = comm.ExecuteReader())
                 {
-                    ret.Add(new Tuple<Guid, string>(Guid.Parse(dr["word_id"].ToString()), dr["word"].ToString()));
-                }
+                    List<Tuple<Guid, string>> ret = new List<Tuple<Guid, string>>();
+                    while (dr.Read())
+                    {
+                        ret.Add(new Tuple<Guid, string>(Guid.Parse(dr["word_id"].ToString()), dr["word"].ToString()));
+                    }
 
-                return ret;
+                    return ret;
+                }
             }
         }
 
-        internal static Guid PhraseAdd(List<Guid> words)
+        internal static Guid PhraseAdd(List<string> words)
         {
             using (SqlConnection conn = GetConnection())
             using (SqlTransaction trans = conn.BeginTransaction())
             {
                 Guid phraseId = Guid.NewGuid();
 
-                using (SqlCommand comm = new SqlCommand("INSERT INTO phrase (phrase_id) VALUES (@phrase_id)", conn))
+                using (SqlCommand comm = new SqlCommand("INSERT INTO phrase (phrase_id) VALUES (@phrase_id)", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@phrase_id", phraseId);
                     comm.ExecuteNonQuery();
@@ -412,10 +416,11 @@ namespace SongService
 
                 for (int i = 1; i <= words.Count; i++)
                 {
-                    using (SqlCommand comm = new SqlCommand("INSERT INTO phrase_words (phrase_id, word_id, order_index) VALUES (@phrase_id, @word_id, @order_index)", conn))
+                    Guid wordId = WordGetIdOrAdd(words[i], trans);
+                    using (SqlCommand comm = new SqlCommand("INSERT INTO phrase_words (phrase_id, word_id, order_index) VALUES (@phrase_id, @word_id, @order_index)", conn, trans))
                     {
                         comm.Parameters.AddWithValue("@phrase_id", phraseId);
-                        comm.Parameters.AddWithValue("@word_id", words[i]);
+                        comm.Parameters.AddWithValue("@word_id", wordId);
                         comm.Parameters.AddWithValue("@order_index", i);
 
                         comm.ExecuteNonQuery();
@@ -425,7 +430,6 @@ namespace SongService
                 trans.Commit();
                 return phraseId;
             }
-
         }
 
         internal static bool PhraseDelete(Guid id)
@@ -447,6 +451,33 @@ namespace SongService
 
                 trans.Commit();
                 return true;
+            }
+        }
+
+        internal static List<string> PhraseGetAll()
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("SELECT phrase_id, word " +
+                                                    "FROM phrase_words pw " +
+                                                    "JOIN word w ON pw.word_id = w.word " +
+                                                    "ORDER BY phrase_id, order_index ASC", conn))
+            using (SqlDataReader dr = comm.ExecuteReader())
+            {
+                Dictionary<Guid, string> ret = new Dictionary<Guid, string>();
+                while (dr.Read())
+                {
+                    Guid phraseId = Guid.Parse(dr["phrase_id"].ToString());
+                    if (ret.ContainsKey(phraseId))
+                    {
+                        ret[phraseId] += " " + dr["word"].ToString();
+                    }
+                    else
+                    {
+                        ret.Add(phraseId, dr["word"].ToString());
+                    }
+                }
+
+                return ret.Values.ToList();
             }
         }
 

@@ -50,6 +50,7 @@ namespace SongService
         [WebInvoke(Method = "POST", UriTemplate = "GetStats")]
         GetStatsResponse GetStats(GetStatsRequest request);
 
+        #region Groups
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GroupAdd")]
         GroupAddResponse GroupAdd(GroupAddRequest request);
@@ -69,7 +70,9 @@ namespace SongService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GroupAll")]
         GroupAllResponse GroupAll(GroupAllRequest request);
+        #endregion
 
+        #region Relations
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "RelationAdd")]
         RelationAddResponse RelationAdd(RelationAddRequest request);
@@ -77,7 +80,9 @@ namespace SongService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "RelationDelete")]
         RelationDeleteResponse RelationDelete(RelationDeleteRequest request);
+        #endregion
 
+        #region Phrases
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "PhraseAdd")]
         PhraseAddResponse PhraseAdd(PhraseAddRequest request);
@@ -87,11 +92,18 @@ namespace SongService
         PhraseDeleteResponse PhraseDelete(PhraseDeleteRequest request);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "PhraseAll")]
+        PhraseAllResponse PhraseAll(PhraseAllRequest request);
+        #endregion
+
+        #region ExportImport
+        [OperationContract]
         [WebGet(UriTemplate = "ExportXML")]
         Stream ExportXML();
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/ImportXML")]
-        bool ImportXML(Stream stream);
+        bool ImportXML(Stream stream); 
+        #endregion
     }
 }

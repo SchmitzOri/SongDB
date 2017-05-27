@@ -191,7 +191,7 @@ namespace SongService
                     Success = DB.GroupUpdate(request.Id, request.Name, request.Words),
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new GroupUpdateResponse()
                 {
@@ -299,6 +299,21 @@ namespace SongService
                 {
                     Id = Guid.Empty,
                 };
+            }
+        }
+
+        public PhraseAllResponse PhraseAll(PhraseAllRequest request)
+        {
+            try
+            {
+                return new PhraseAllResponse()
+                {
+                    Phrases = DB.PhraseGetAll(),
+                };
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
 
