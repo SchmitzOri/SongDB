@@ -239,21 +239,70 @@ namespace SongService
             }
         }
 
-        internal static Guid GroupAdd(string name)
+        private static Guid WordGetIdOrAdd(string word, SqlTransaction trans)
+        {
+            // Check if word exists, or insert word if needed
+            object wordIdObj = null;
+            Guid wordId;
+            using (SqlCommand comm = new SqlCommand("SELECT TOP 1 word_id FROM word WHERE word = @word", trans.Connection, trans))
+            {
+                comm.Parameters.AddWithValue("@word", word);
+
+                wordIdObj = comm.ExecuteScalar();
+            }
+
+            if (wordIdObj == null)
+            {
+                using (SqlCommand comm = new SqlCommand("INSERT INTO word (word_id, word) VALUES (@word_id, @word) ", trans.Connection, trans))
+                {
+                    wordId = Guid.NewGuid();
+                    comm.Parameters.AddWithValue("@word", word);
+                    comm.Parameters.AddWithValue("@word_id", wordId);
+
+                    comm.ExecuteNonQuery();
+                }
+            }
+            else
+            {
+                wordId = Guid.Parse(wordIdObj.ToString());
+            }
+
+            return wordId;
+        }
+
+
+        internal static Guid GroupAdd(string name, List<string> words)
         {
             using (SqlConnection conn = GetConnection())
-            using (SqlCommand comm = new SqlCommand("INSERT INTO group (group_id, group_name) VALUES (@group_id, @group_name)", conn))
+            using (SqlTransaction trans = conn.BeginTransaction())
             {
                 Guid groupId = Guid.NewGuid();
-                comm.Parameters.AddWithValue("@group_id", groupId);
-                comm.Parameters.AddWithValue("@group_name", name);
-                comm.ExecuteNonQuery();
+                using (SqlCommand comm = new SqlCommand("INSERT INTO group (group_id, group_name) VALUES (@group_id, @group_name)", conn))
+                {
+                    comm.Parameters.AddWithValue("@group_id", groupId);
+                    comm.Parameters.AddWithValue("@group_name", name);
+                    comm.ExecuteNonQuery();
+                }
+
+                foreach (string word in words)
+                {
+                    Guid wordId = WordGetIdOrAdd(word, trans);
+                    using (SqlCommand comm = new SqlCommand("INSERT INTO group_words (group_id, word_id) VALUES (@group_id, @word_id) ", conn, trans))
+                    {
+                        comm.Parameters.AddWithValue("@group_id", groupId);
+                        comm.Parameters.AddWithValue("@word_id", wordId);
+
+                        comm.ExecuteNonQuery();
+                    }
+                }
+
+                trans.Commit();
 
                 return groupId;
             }
         }
 
-        internal static bool GroupUpdate(Guid id, string name, List<Guid> words)
+        internal static bool GroupUpdate(Guid id, string name, List<string> words)
         {
             using (SqlConnection conn = GetConnection())
             using (SqlTransaction trans = conn.BeginTransaction())
@@ -264,8 +313,9 @@ namespace SongService
                     comm.ExecuteNonQuery();
                 }
 
-                foreach (var wordId in words)
+                foreach (string word in words)
                 {
+                    Guid wordId = WordGetIdOrAdd(word, trans);
                     using (SqlCommand comm = new SqlCommand("INSERT INTO group_words (group_id, word_id) VALUES (@group_id, @word_id)", conn))
                     {
                         comm.Parameters.AddWithValue("@group_id", id);
@@ -305,6 +355,45 @@ namespace SongService
 
                 trans.Commit();
                 return true;
+            }
+        }
+
+        internal static List<Group> GroupGetAll()
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("SELECT group_name, group_id " +
+                                                        "FROM [group]", conn))
+            using (SqlDataReader dr = comm.ExecuteReader())
+            {
+                List<Group> ret = new List<Group>();
+                while (dr.Read())
+                {
+                    ret.Add(new Group()
+                    {
+                        Id = Guid.Parse(dr["group_id"].ToString()),
+                        Name = dr["group_name"].ToString(),
+                    });
+                }
+
+                return ret;
+            }
+        }
+
+        internal static List<Tuple<Guid, string>> GroupGetWords(Guid groupId)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("SELECT w.word, w.word_id " +
+                                                    "FROM group_words gw " +
+                                                    "JOIN word w ON w.word_id = gw.word_id", conn))
+            using (SqlDataReader dr = comm.ExecuteReader())
+            {
+                List<Tuple<Guid, string>> ret = new List<Tuple<Guid, string>>();
+                while (dr.Read())
+                {
+                    ret.Add(new Tuple<Guid, string>(Guid.Parse(dr["word_id"].ToString()), dr["word"].ToString()));
+                }
+
+                return ret;
             }
         }
 
@@ -492,30 +581,7 @@ namespace SongService
                         foreach (var word in row.Split(' '))
                         {
                             // Insert word
-                            object wordIdObj = null;
-                            Guid wordId;
-                            using (SqlCommand comm = new SqlCommand("SELECT TOP 1 word_id FROM word WHERE word = @word", conn, trans))
-                            {
-                                comm.Parameters.AddWithValue("@word", word);
-
-                                wordIdObj = comm.ExecuteScalar();
-                            }
-
-                            if (wordIdObj == null)
-                            {
-                                using (SqlCommand comm = new SqlCommand("INSERT INTO word (word_id, word) VALUES (@word_id, @word) ", conn, trans))
-                                {
-                                    wordId = Guid.NewGuid();
-                                    comm.Parameters.AddWithValue("@word", word);
-                                    comm.Parameters.AddWithValue("@word_id", wordId);
-
-                                    comm.ExecuteNonQuery();
-                                }
-                            }
-                            else
-                            {
-                                wordId = Guid.Parse(wordIdObj.ToString());
-                            }
+                            Guid wordId = WordGetIdOrAdd(word, trans);
 
                             using (SqlCommand comm = new SqlCommand("INSERT INTO location (location_id, song_id, word_id, word_number_in_file, verse_number, row_in_verse) " +
                                                                                   "VALUES (NEWID(), @song_id, @word_id, @word_number_in_file, @verse_number, @row_in_verse) ", conn, trans))
