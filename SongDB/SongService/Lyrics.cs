@@ -170,7 +170,7 @@ namespace SongService
             {
                 return new GroupAddResponse()
                 {
-                    Id = DB.GroupAdd(request.Name),
+                    Id = DB.GroupAdd(request.Name, request.Words),
                 };
             }
             catch (Exception)
@@ -197,6 +197,36 @@ namespace SongService
                 {
                     Success = false,
                 };
+            }
+        }
+
+        public GroupWordsResponse GroupWords(GroupWordsRequest request)
+        {
+            try
+            {
+                return new GroupWordsResponse()
+                {
+                    Words = DB.GroupGetWords(request.Id),
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public GroupAllResponse GroupAll(GroupAllRequest request)
+        {
+            try
+            {
+                return new GroupAllResponse()
+                {
+                    Groups = DB.GroupGetAll(),
+                };
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 

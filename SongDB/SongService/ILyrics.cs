@@ -63,6 +63,14 @@ namespace SongService
         GroupDeleteResponse GroupDelete(GroupDeleteRequest request);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GroupWords")]
+        GroupWordsResponse GroupWords(GroupWordsRequest request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GroupAll")]
+        GroupAllResponse GroupAll(GroupAllRequest request);
+
+        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "RelationAdd")]
         RelationAddResponse RelationAdd(RelationAddRequest request);
 
