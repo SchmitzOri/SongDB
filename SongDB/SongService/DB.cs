@@ -453,7 +453,7 @@ namespace SongService
             }
         }
 
-        internal static List<string> PhraseGetAll()
+        internal static List<PhraseDTO> PhraseGetAll()
         {
             using (SqlConnection conn = GetConnection())
             using (SqlCommand comm = new SqlCommand("SELECT phrase_id, word " +
@@ -476,7 +476,7 @@ namespace SongService
                     }
                 }
 
-                return ret.Values.ToList();
+                return ret.Keys.Select(id => new PhraseDTO() { PhraseId = id, Phrase = ret[id] }).ToList();
             }
         }
 

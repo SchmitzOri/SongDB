@@ -8,6 +8,15 @@ using System.Threading.Tasks;
 namespace CommonDTO
 {
     [DataContract]
+    public class PhraseDTO
+    {
+        [DataMember]
+        public Guid PhraseId { get; set; }
+        [DataMember]
+        public string Phrase { get; set; }
+    }
+
+    [DataContract]
     public class PhraseLocation
     {
         [DataMember]
@@ -41,7 +50,7 @@ namespace CommonDTO
     public class PhraseAllResponse
     {
         [DataMember]
-        public List<string> Phrases { get; set; }
+        public List<PhraseDTO> Phrases { get; set; }
     }
 
     [DataContract]
