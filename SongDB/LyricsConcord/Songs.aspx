@@ -5,6 +5,8 @@
     <form id="upload_form" method="post" enctype="multipart/form-data" runat="server">
         <input type="file" id="File1" name="File1" runat="server">
         <input type="submit" id="Submit1" name="Submit1" value="Upload" runat="server" onserverclick="Submit1_ServerClick">
+        <br />
+        <label id="successMsg" name="successMsg" runat="server" hidden>The file has been uploaded</label>
     </form>
     <!-- Ajax doesn't work. Check Why
         <div class="form-group">
@@ -17,13 +19,8 @@
     <div class="form-group">
         <label>Filter</label>
         <div class="radio">
-            <label>
-                <input type="radio" name="optionsRadios" id="optionDate" value="date" checked>By date
-            </label>
-        </div>
-        <div class="radio">
             <label style="display:inline-block; margin-right:10px">
-                <input type="radio" name="optionsRadios" id="optionName" value="song">By song name
+                <input type="radio" name="optionsRadios" id="optionName" value="song" checked>By song name
             </label>
             <div style="display:inline-block">
                 <input class="form-control" name="filterVal" id="song" placeholder="Enter song name" disabled>
@@ -65,6 +62,10 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('h1.page-header').text('Songs');
+        });
+
+        $('#successMsg').on('show', function () {
+            $('#successMsg').fadeOut("slow", "linear");
         });
 
         var t = $('#table').DataTable({

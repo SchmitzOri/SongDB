@@ -48,8 +48,17 @@ namespace LyricsConcord
                         songData = binaryReader.ReadBytes(File1.PostedFile.ContentLength);
                     }
 
-                    ServiceAccessor.UploadSong(songData);
-                    Response.Write("The file has been uploaded.");
+                    if (System.IO.Path.GetExtension(File1.PostedFile.FileName) == "txt")
+                    {
+                        ServiceAccessor.UploadSong(songData);
+                    }
+                    else
+                    {
+
+                    }
+                    
+                    successMsg.Attributes.Remove("hidden");
+                    //Response.Write(".");
                 }
                 catch (Exception ex)
                 {
