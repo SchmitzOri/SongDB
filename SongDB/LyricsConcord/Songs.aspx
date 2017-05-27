@@ -4,11 +4,19 @@
     <label>Upload Song</label>
     <form id="upload_form" method="post" enctype="multipart/form-data" runat="server">
         <input type="file" id="File1" name="File1" runat="server">
-        <input type="submit" id="Submit1" name="Submit1" value="Upload" runat="server" onserverclick="Submit1_ServerClick">
+        <input type="submit" id="Submit1" name="Submit1" value="Upload" runat="server" onserverclick="Submit1_ServerClick" onclick="setTimeout(function () { $('#succ_msg').fadeOut() }, 5000)">
         <br />
-        <label id="successMsg" name="successMsg" runat="server" hidden>The file has been uploaded</label>
-        <div class="alert alert-success">
+        <div id="succ_msg" class="alert alert-success alert-dismissable" runat="server" hidden>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             The file has been uploaded
+        </div>
+        <div id="warn_msg" class="alert alert-warning alert-dismissable" runat="server" hidden>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Please select a file to upload
+        </div>
+        <div id="err_msg" class="alert alert-danger alert-dismissable" runat="server" hidden>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Errot uploading file
         </div>
     </form>
     <!-- Ajax doesn't work. Check Why
@@ -65,7 +73,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('h1.page-header').text('Songs');
-            $('#successMsg').attr('hidden', "hidden");
+            //$('#succ_msg').attr('hidden', "hidden");
         });
 
         var t = $('#table').DataTable({

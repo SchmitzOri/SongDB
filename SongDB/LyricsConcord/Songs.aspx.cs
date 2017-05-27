@@ -56,21 +56,17 @@ namespace LyricsConcord
                     {
                         ServiceAccessor.UploadMultipleSongs(songData);
                     }
-                    
-                    successMsg.Attributes.Remove("hidden");
-                   
-                    //Response.Write(".");
+
+                    succ_msg.Attributes.Remove("hidden");
                 }
                 catch (Exception ex)
                 {
-                    //TODO: label
-                    Response.Write("Error: " + ex.Message);
+                    err_msg.Attributes.Remove("hidden");
                 }
             }
             else
             {
-                // TODO: label
-                Response.Write("Please select a file to upload.");
+                warn_msg.Attributes.Remove("hidden");
             }
 
         }
