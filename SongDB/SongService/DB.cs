@@ -270,7 +270,6 @@ namespace SongService
             return wordId;
         }
 
-
         internal static Guid GroupAdd(string name, List<string> words)
         {
             using (SqlConnection conn = GetConnection())
@@ -553,24 +552,47 @@ namespace SongService
         internal static GetStatsResponse GetStats()
         {
             using (SqlConnection conn = GetConnection())
-            using (SqlCommand comm = new SqlCommand("SELECT CASE num_of_rows WHEN 0 THEN 0 ELSE (num_of_characters / num_of_words) END chars_per_word, " +
-                                                    "CASE num_of_rows WHEN 0 THEN 0 ELSE(num_of_words / num_of_rows) END words_in_row, " +
-                                                    "CASE num_of_verses WHEN 0 THEN 0 ELSE(num_of_rows / num_of_verses) END rows_in_verse, " +
-                                                    "CASE num_of_songs WHEN 0 THEN 0 ELSE(num_of_verses / num_of_songs) END verses_in_songs " +
-                                                    "FROM stats", conn))
-            using (SqlDataReader dr = comm.ExecuteReader())
             {
-                if (dr.Read())
+                GetStatsResponse ret;
+                using (SqlCommand comm = new SqlCommand("SELECT CASE num_of_rows WHEN 0 THEN 0 ELSE (num_of_characters / num_of_words) END chars_per_word, " +
+                                                        "CASE num_of_rows WHEN 0 THEN 0 ELSE(num_of_words / num_of_rows) END words_in_row, " +
+                                                        "CASE num_of_verses WHEN 0 THEN 0 ELSE(num_of_rows / num_of_verses) END rows_in_verse, " +
+                                                        "CASE num_of_songs WHEN 0 THEN 0 ELSE(num_of_verses / num_of_songs) END verses_in_songs " +
+                                                        "FROM stats", conn))
+                using (SqlDataReader dr = comm.ExecuteReader())
                 {
-                    return new GetStatsResponse()
+                    if (dr.Read())
                     {
-                        CharsPerWord = Convert.ToDecimal(dr["chars_per_word"]),
-                        RowsInVerse = Convert.ToDecimal(dr["rows_in_verse"]),
-                        VersesInSongs = Convert.ToDecimal(dr["verses_in_songs"]),
-                        WordsInRow = Convert.ToDecimal(dr["words_in_row"]),
-                    };
+                        ret = new GetStatsResponse()
+                        {
+                            CharsPerWord = Convert.ToDecimal(dr["chars_per_word"]),
+                            RowsInVerse = Convert.ToDecimal(dr["rows_in_verse"]),
+                            VersesInSongs = Convert.ToDecimal(dr["verses_in_songs"]),
+                            WordsInRow = Convert.ToDecimal(dr["words_in_row"]),
+                            WordCloud = new List<Tuple<int, string>>(),
+                        };
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                return null;
+
+                using (SqlCommand comm = new SqlCommand("SELECT TOP 100 w.word, COUNT(*) count " +
+                                                        "FROM word w " +
+                                                        "JOIN location l ON w.word_id = l.word_id " +
+                                                        "GROUP BY w.word_id, w.word " +
+                                                        "ORDER BY count DESC", conn))
+                using (SqlDataReader dr = comm.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        ret.WordCloud.Add(new Tuple<int, string>(Convert.ToInt32(dr["count"]), dr["word"].ToString()));
+
+                    }
+                }
+
+                return ret;
             }
         }
 
