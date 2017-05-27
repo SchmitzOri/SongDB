@@ -315,7 +315,11 @@
                     $content.unmark({
                         done: function () {
                             $content.mark(searchVal, {
-                                accuracy: "exactly",
+                                "accuracy": {
+                                    "value": "exactly",
+                                    "limiters": [",", "."]
+                                },
+                                ignorePunctuation: ["'", "`"],
                                 done: function () {
                                     $results = $content.find("mark");
                                     if (isNext) {
