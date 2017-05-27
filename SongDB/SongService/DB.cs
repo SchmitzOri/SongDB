@@ -324,7 +324,7 @@ namespace SongService
                     }
                 }
 
-                using (SqlCommand comm = new SqlCommand("UPDATE group SET group_name = @group_name WHERE group_id = @group_id", conn, trans))
+                using (SqlCommand comm = new SqlCommand("UPDATE [group] SET group_name = @group_name WHERE group_id = @group_id", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@group_id", id);
                     comm.Parameters.AddWithValue("@group_name", name);
@@ -384,16 +384,20 @@ namespace SongService
             using (SqlConnection conn = GetConnection())
             using (SqlCommand comm = new SqlCommand("SELECT w.word, w.word_id " +
                                                     "FROM group_words gw " +
-                                                    "JOIN word w ON w.word_id = gw.word_id", conn))
-            using (SqlDataReader dr = comm.ExecuteReader())
+                                                    "JOIN word w ON w.word_id = gw.word_id " +
+                                                    "WHERE group_id = @groupId", conn))
             {
-                List<Tuple<Guid, string>> ret = new List<Tuple<Guid, string>>();
-                while (dr.Read())
+                comm.Parameters.AddWithValue("@groupId", groupId);
+                using (SqlDataReader dr = comm.ExecuteReader())
                 {
-                    ret.Add(new Tuple<Guid, string>(Guid.Parse(dr["word_id"].ToString()), dr["word"].ToString()));
-                }
+                    List<Tuple<Guid, string>> ret = new List<Tuple<Guid, string>>();
+                    while (dr.Read())
+                    {
+                        ret.Add(new Tuple<Guid, string>(Guid.Parse(dr["word_id"].ToString()), dr["word"].ToString()));
+                    }
 
-                return ret;
+                    return ret;
+                }
             }
         }
 

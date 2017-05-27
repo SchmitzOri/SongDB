@@ -191,7 +191,7 @@ namespace SongService
                     Success = DB.GroupUpdate(request.Id, request.Name, request.Words),
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new GroupUpdateResponse()
                 {
