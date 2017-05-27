@@ -670,7 +670,7 @@ namespace SongService
                     }
                     else
                     {
-                        foreach (var word in row.Split(' '))
+                        foreach (var word in row.Trim().Split(' '))
                         {
                             // Insert word
                             Guid wordId = WordGetIdOrAdd(word, trans);
