@@ -53,6 +53,9 @@
                             <a href="Groups.aspx">Groups</a>
                         </li>
                         <li>
+                            <a href="Phrases.aspx">Phrases</a>
+                        </li>
+                        <li>
                             <a href="#">Words<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>

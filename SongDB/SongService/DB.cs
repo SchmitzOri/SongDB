@@ -341,13 +341,13 @@ namespace SongService
             using (SqlConnection conn = GetConnection())
             using (SqlTransaction trans = conn.BeginTransaction())
             {
-                using (SqlCommand comm = new SqlCommand("DELETE group_words WHERE group_id = @group_id", conn))
+                using (SqlCommand comm = new SqlCommand("DELETE group_words WHERE group_id = @group_id", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@group_id", id);
                     comm.ExecuteNonQuery();
                 }
 
-                using (SqlCommand comm = new SqlCommand("DELETE group WHERE group_id = @group_id", conn))
+                using (SqlCommand comm = new SqlCommand("DELETE [group] WHERE group_id = @group_id", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@group_id", id);
                     comm.ExecuteNonQuery();
