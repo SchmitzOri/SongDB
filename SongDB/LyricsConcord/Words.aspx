@@ -7,7 +7,7 @@
                 <input type="radio" name="optionsRadios" id="optionSong" value="song" checked>Choose song
             </label>
             <div style="display:inline-block">
-                <select id="song_id" class="form-control">
+                <select id="song_id" class="form-control" name="filterVal">
                     <option value="">All...</option>
                     <%foreach (var item in songs.Songs)
                         {%>
@@ -20,6 +20,15 @@
             <label style="display:inline-block; margin-right:10px">
                 <input type="radio" name="optionsRadios" id="optionGroup" value="group">Choose group
             </label>
+            <div style="display:inline-block">
+                <select id="group_id" class="form-control" name="filterVal" disabled>
+                    <option value="">Choose group...</option>
+                    <%foreach (var item in groups.Groups)
+                        {%>
+                    <option value="<%:item.Id %>"><%:item.Name %></option>
+                    <%} %>
+                </select>
+            </div>
         </div>
     </div>
     <table class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline" id="table" role="grid" aria-describedby="dataTables-words">
@@ -39,7 +48,7 @@
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                   <div class="row">
-                      <div class="col-lg-3"><h4 class="modal-title" id="myLargeModalLabel">Large modal</h4></div>
+                      <div class="col-lg-3"><h4 class="modal-title" id="myLargeModalLabel"></h4></div>
                       <div class="col-lg-1"><button class="btn btn-primary" data-search="prev">prev</button></div>
                       <div class="col-lg-1"><button class="btn btn-primary" data-search="next">next</button></div>
                   </div>
@@ -73,6 +82,18 @@
             ],
             pageLength: 25,
             ordering: false
+        });
+
+        $("#optionSong").change(function () {
+            $("#group_id").attr('disabled', "disabled");
+            $('#song_id').removeAttr('disabled');
+            $('#song_id').change();
+        });
+
+        $("#optionGroup").change(function () {
+            $("#song_id").attr('disabled', "disabled");
+            $('#group_id').removeAttr('disabled');
+            $('#group_id').change();
         });
 
         var word = null,
@@ -120,7 +141,7 @@
                 currentIndex += $(this).is($prevBtn) ? -1 : 1;
                 $nextBtn[0].disabled = false;
                 $prevBtn[0].disabled = false;
-                if (currentIndex == 0 && ($('#song_id').val() != '' || currentSong == 0)) {
+                if (currentIndex == 0 && (($('#song_id').val() != '' && $("input[name='optionsRadios']:checked").val() == "song") || currentSong == 0)) {
                     $prevBtn[0].disabled = true;
                 } else if (currentIndex < 0) {
                     prevSong();
@@ -130,7 +151,7 @@
                     }
                 }
                 if (currentIndex == $results.length - 1 &&
-                    ($('#song_id').val() != '' || currentSong + 1 == wordSongs.length)) {
+                    (($('#song_id').val() != '' && $("input[name='optionsRadios']:checked").val() == "song") || currentSong + 1 == wordSongs.length)) {
                     $nextBtn[0].disabled = true;
                 } else if (currentIndex > $results.length - 1) {
                     nextSong('');
@@ -149,7 +170,7 @@
             wordId = $(e.relatedTarget).attr('id');
             var songRequest = { wordId: wordId };
 
-            if ($('#song_id').val() != '') {
+            if ($('#song_id').val() != '' && $("input[name='optionsRadios']:checked").val() == "song") {
                 nextSong($('#song_id').val());
             } else {
                 $.ajax({
@@ -162,8 +183,16 @@
                         wordSongs = msg.d;
                         currentSong = -1;
 
-                        // Show first context
-                        nextSong('');
+                        if (wordSongs.length == 0) {
+                            $('h4.modal-title').text("No song found");
+                            $('div.modal-body').text("");
+                            $nextBtn[0].disabled = true;
+                            $prevBtn[0].disabled = true;
+
+                        } else {
+                            // Show first context
+                            nextSong('');
+                        }
                     },
                     error: function (xhr, status, error) {
                         alert(xhr.responseText);
@@ -201,6 +230,35 @@
                         t.row.add([this.Item1, this.Item2,
                             '<button type="button" id=' + this.Item1 + ' name= ' + this.Item2 +
                             ' class="btn" data-toggle="modal" data-target=".bs-example-modal-lg">show context</button>']).draw(false);
+                    })
+                }
+            });
+
+            return false;
+        });
+
+        $('#group_id').on('change', function () {
+            var jsonRequest = { groupId: null };
+
+            if ($('#group_id').val() == '') {
+                t.clear().draw();
+                return false;
+            }
+
+            jsonRequest.groupId = $('#group_id').val();
+
+            $.ajax({
+                type: "POST",
+                url: "Words.aspx/GetGroupWords",
+                data: JSON.stringify(jsonRequest),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    t.clear().draw();
+                    $.each(msg.d, function () {
+                        t.row.add([this.Item1, this.Item2,
+                        '<button type="button" id=' + this.Item1 + ' name= ' + this.Item2 +
+                        ' class="btn" data-toggle="modal" data-target=".bs-example-modal-lg">show context</button>']).draw(false);
                     })
                 }
             });
@@ -271,9 +329,9 @@
                         }
                     });
 
-                    if ($('#song_id').val() != '' || (currentSong == 0 && currentIndex == 0)) {
+                    if (($('#song_id').val() != '' && $("input[name='optionsRadios']:checked").val() == "song") || (currentSong == 0 && currentIndex == 0)) {
                         $prevBtn[0].disabled = true;
-                        if (($('#song_id').val() != '' || currentSong == wordSongs.length - 1) &&
+                        if ((($('#song_id').val() != '' && $("input[name='optionsRadios']:checked").val() == "song") || currentSong == wordSongs.length - 1) &&
                             currentIndex + 1 > $results.length - 1) {
                             $nextBtn[0].disabled = true;
                         }

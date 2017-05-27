@@ -39,19 +39,16 @@ namespace LyricsConcord
                     }
 
                     ServiceAccessor.UploadBackup(backupData);
-                    // TODO: label
-                    Response.Write("The file has been uploaded.");
+                    succ_msg.Attributes.Remove("hidden");
                 }
                 catch (Exception ex)
                 {
-                    // TODO: label
-                    Response.Write("Error: " + ex.Message);
+                    err_msg.Attributes.Remove("hidden");
                 }
             }
             else
             {
-                // TODO: Label
-                Response.Write("Please select a file to upload.");
+                warn_msg.Attributes.Remove("hidden");
             }
         }
     }

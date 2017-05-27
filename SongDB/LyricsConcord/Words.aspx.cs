@@ -12,11 +12,12 @@ namespace LyricsConcord
     public partial class Words : System.Web.UI.Page
     {
         protected SongsResponse songs;
+        protected GroupAllResponse groups;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             songs = ServiceAccessor.MakeRequest<SongsRequest, SongsResponse>(new SongsRequest(), "Songs");
-
+            groups = ServiceAccessor.MakeRequest<GroupAllRequest, GroupAllResponse>(new GroupAllRequest(), "GroupAll");
         }
 
         [WebMethod]
@@ -34,7 +35,13 @@ namespace LyricsConcord
         [WebMethod]
         public static object GetSongLyrics(Guid songId)
         {
-            return ServiceAccessor.MakeRequest<SongLyricsRequest, SongLyricsResponse>(new SongLyricsRequest() { SongId=songId}, "SongLyrics").SongLyrics;
+            return ServiceAccessor.MakeRequest<SongLyricsRequest, SongLyricsResponse>(new SongLyricsRequest() { SongId = songId}, "SongLyrics").SongLyrics;
+        }
+
+        [WebMethod]
+        public static object GetGroupWords(Guid groupId)
+        {
+            return ServiceAccessor.MakeRequest<GroupWordsRequest, GroupWordsResponse>(new GroupWordsRequest() { Id = groupId }, "GroupWords").Words;
         }
     }
 }

@@ -6,6 +6,18 @@
     <form id="upload_form" method="post" enctype="multipart/form-data" runat="server">
         <input type="file" id="File1" name="File1" runat="server">
         <input type="submit" id="Submit1" name="Submit1" value="Upload" runat="server" onserverclick="Submit1_ServerClick">
+        <div id="succ_msg" class="alert alert-success alert-dismissable" runat="server" hidden>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            The import succeeded
+        </div>
+        <div id="warn_msg" class="alert alert-warning alert-dismissable" runat="server" hidden>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Please select a file to import
+        </div>
+        <div id="err_msg" class="alert alert-danger alert-dismissable" runat="server" hidden>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Errot importing file
+        </div>
     </form>
     <label>Export database</label>
     <div class="form-group">
