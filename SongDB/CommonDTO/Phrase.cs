@@ -8,6 +8,31 @@ using System.Threading.Tasks;
 namespace CommonDTO
 {
     [DataContract]
+    public class PhraseLocation
+    {
+        [DataMember]
+        public Guid SongId { get; set; }
+        [DataMember]
+        public string SongName { get; set; }
+        [DataMember]
+        public int WordNumberInFile { get; set; }
+    }
+
+    [DataContract]
+    public class PhraseLocationRequest
+    {
+        [DataMember]
+        public string Phrase { get; set; }
+    }
+
+    [DataContract]
+    public class PhraseLocationResponse
+    {
+        [DataMember]
+        public List<PhraseLocation> Locations { get; set; }
+    }
+
+    [DataContract]
     public class PhraseAllRequest
     {
     }

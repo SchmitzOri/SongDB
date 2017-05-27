@@ -481,6 +481,45 @@ namespace SongService
             }
         }
 
+        internal static List<PhraseLocation> PhraseLocations(string phrase)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand())
+            {
+                string[] words = phrase.Split(' ');
+                List<string> joinClause = new List<string>(words.Length);
+                List<string> whereClause = new List<string>(words.Length);
+                for (int i = 0; i < words.Length; i++)
+                {
+                    joinClause.Add(" JOIN location l" + i + " ON (l" + i + ".song_id = s.song_id AND l" + i + ".word_number_in_file - " + i + " = l0.word_number_in_file) " +
+                                   "JOIN word w" + i + " ON(w" + i + ".word_id = l" + i + ".word_id) ");
+                    whereClause.Add(" w" + i + ".word = @w" + i);
+                    comm.Parameters.AddWithValue("@w" + i, words[i]);
+                }
+                comm.Connection = conn;
+                comm.CommandText = "SELECT s.song_id, s.song_name, l0.word_number_in_file " +
+                    "FROM song s " +
+                    string.Join(" ", joinClause) +
+                    " WHERE " + string.Join(" AND ", whereClause);
+
+                using (SqlDataReader dr = comm.ExecuteReader())
+                {
+                    List<PhraseLocation> ret = new List<PhraseLocation>();
+                    while (dr.Read())
+                    {
+                        ret.Add(new PhraseLocation()
+                        {
+                            SongId = Guid.Parse(dr["song_id"].ToString()),
+                            SongName = dr["song_name"].ToString(),
+                            WordNumberInFile = Convert.ToInt32(dr["word_number_in_file"]),
+                        });
+                    }
+
+                    return ret;
+                }
+            }
+        }
+
         internal static Guid RelationAdd(string name, Guid relationType, Guid word1, Guid word2)
         {
             using (SqlConnection conn = GetConnection())

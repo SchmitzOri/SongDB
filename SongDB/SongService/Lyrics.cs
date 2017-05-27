@@ -335,6 +335,21 @@ namespace SongService
             }
         }
 
+        public PhraseLocationResponse PhraseLocations(PhraseLocationRequest request)
+        {
+            try
+            {
+                return new PhraseLocationResponse()
+                {
+                    Locations = DB.PhraseLocations(request.Phrase),
+                };
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public Stream ExportXML()
         {
             // Exporting all tables to xml files
