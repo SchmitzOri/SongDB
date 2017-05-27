@@ -35,12 +35,45 @@ namespace SongService
             return new UploadSongResponse() { SongId = DB.AddSongLyrics(Artist, Name, Lyrics) };
         }
 
-        public bool UploadMultipleSongs(Stream file)
+        public List<UploadSongResponse> UploadMultipleSongs(Stream stream)
         {
-            var gzip = new GZipStream(file, CompressionMode.Decompress);
-            //new ZipArchive
-            //TODO: UploadMultipleSongs
-            return true;
+            try
+            {
+                // Save stream to file
+                string zipFilePath = ConfigurationManager.AppSettings["ZIP_FOLDER"] + "Songs.zip";
+                if (File.Exists(zipFilePath))
+                {
+                    File.Delete(zipFilePath);
+                }
+
+                using (FileStream writer = new FileStream(zipFilePath, FileMode.Create))
+                {
+                    stream.CopyTo(writer);
+                }
+
+                // Clean export folder
+                foreach (FileInfo file in new DirectoryInfo(ConfigurationManager.AppSettings["EXPORT_FOLDER"]).GetFiles())
+                {
+                    file.Delete();
+                }
+
+                // Unzip to folder
+                ZipFile.ExtractToDirectory(zipFilePath, ConfigurationManager.AppSettings["EXPORT_FOLDER"]);
+
+                // Import all songs in folder
+                List<UploadSongResponse> ret = new List<UploadSongResponse>();
+
+                foreach (FileInfo file in new DirectoryInfo(ConfigurationManager.AppSettings["EXPORT_FOLDER"]).GetFiles())
+                {
+                    ret.Add(UploadSong(file.OpenRead()));
+                }
+
+                return ret;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public SongsResponse Songs(SongsRequest request)
