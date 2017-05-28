@@ -64,7 +64,7 @@
                                 Add Word</label>
                             <div class="col-md-6">
                                 <select class="form-control" id="new_word">
-                                    <option value="-1">Select a words to add...</option>
+                                    <option value="-1">Select a word to add...</option>
                                     <%foreach (var item in words.Words)
                                         {%>
                                     <option><%:item.Item2 %></option>
