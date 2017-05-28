@@ -23,6 +23,8 @@ namespace CommonDTO
         public Guid SongId { get; set; }
         [DataMember]
         public string SongName { get; set; }
+        [DataMember]
+        public string ArtistName { get; set; }
     }
 
     [DataContract]

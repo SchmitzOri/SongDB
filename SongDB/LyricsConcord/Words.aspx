@@ -11,7 +11,7 @@
                     <option value="">All...</option>
                     <%foreach (var item in songs.Songs)
                         {%>
-                    <option value="<%:item.Id %>"><%:item.Name %></option>
+                    <option value="<%:item.Id %>" data-artist="<%:item.ArtistName %>"><%:item.Name %></option>
                     <%} %>
                 </select>
             </div>
@@ -271,10 +271,10 @@
             currentSong++;
 
             if (songId != '') {
-                songName = $('#song_id')[0].selectedOptions[0].text;
+                songName = $('#song_id')[0].selectedOptions[0].text + " - " + $($('#song_id')[0].selectedOptions[0]).data('artist');
             } else if (currentSong < wordSongs.length) {
                 songId = wordSongs[currentSong].Id;
-                songName = wordSongs[currentSong].Name;
+                songName = wordSongs[currentSong].Name + " - " + wordSongs[currentSong].ArtistName;
             } else {
                 return;
             }
@@ -290,7 +290,7 @@
 
             if (currentSong >= 0) {
                 songId = wordSongs[currentSong].Id;
-                songName = wordSongs[currentSong].Name;
+                songName = wordSongs[currentSong].Name + " - " + wordSongs[currentSong].ArtistName;
             } else {
                 return;
             }

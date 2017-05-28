@@ -168,8 +168,9 @@ namespace SongService
                     WordSongs = new List<SongDTO>()
                 };
 
-                using (SqlCommand comm = new SqlCommand("SELECT DISTINCT s.song_id, song_name, artist_id " +
+                using (SqlCommand comm = new SqlCommand("SELECT DISTINCT s.song_id, song_name, s.artist_id, a.artist_name " +
                                                         "FROM song s " +
+                                                        "JOIN artist a ON a.artist_id = s.artist_id " +
                                                         "JOIN location l ON s.song_id = l.song_id " +
                                                         "WHERE l.word_id = @word_id", conn))
                 {
@@ -183,7 +184,8 @@ namespace SongService
                             {
                                 Id = Guid.Parse(dr["song_id"].ToString()),
                                 Name = dr["song_name"].ToString(),
-                                ArtistId = Guid.Parse(dr["artist_id"].ToString())
+                                ArtistId = Guid.Parse(dr["artist_id"].ToString()),
+                                ArtistName = dr["artist_name"].ToString()
                             });
                         }
                     }
@@ -496,8 +498,9 @@ namespace SongService
                     comm.Parameters.AddWithValue("@w" + i, words[i]);
                 }
                 comm.Connection = conn;
-                comm.CommandText = "SELECT DISTINCT s.song_id, s.song_name " +
+                comm.CommandText = "SELECT DISTINCT s.song_id, s.song_name, a.artist_name " +
                     "FROM song s " +
+                    "JOIN artist a ON s.artist_id = a.artist_id " +
                     string.Join(" ", joinClause) +
                     " WHERE " + string.Join(" AND ", whereClause);
 
@@ -509,7 +512,8 @@ namespace SongService
                         ret.Add(new PhraseLocation()
                         {
                             SongId = Guid.Parse(dr["song_id"].ToString()),
-                            SongName = dr["song_name"].ToString()
+                            SongName = dr["song_name"].ToString(),
+                            ArtistName = dr["artist_name"].ToString()
                         });
                     }
 

@@ -219,7 +219,7 @@
 
             if (currentSong < phraseSongs.length) {
                 songId = phraseSongs[currentSong].SongId;
-                songName = phraseSongs[currentSong].SongName;
+                songName = phraseSongs[currentSong].SongName + " - " + phraseSongs[currentSong].ArtistName;
             } else {
                 return;
             }
@@ -235,7 +235,7 @@
 
             if (currentSong >= 0) {
                 songId = phraseSongs[currentSong].SongId;
-                songName = phraseSongs[currentSong].SongName;
+                songName = phraseSongs[currentSong].SongName + " - " + phraseSongs[currentSong].ArtistName;
             } else {
                 return;
             }
