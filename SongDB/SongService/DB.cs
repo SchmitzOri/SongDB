@@ -413,7 +413,7 @@ namespace SongService
                     comm.ExecuteNonQuery();
                 }
 
-                for (int i = 1; i <= words.Count; i++)
+                for (int i = 0; i < words.Count; i++)
                 {
                     Guid wordId = WordGetIdOrAdd(words[i], trans);
                     using (SqlCommand comm = new SqlCommand("INSERT INTO phrase_words (phrase_id, word_id, order_index) VALUES (@phrase_id, @word_id, @order_index)", conn, trans))
@@ -436,13 +436,13 @@ namespace SongService
             using (SqlConnection conn = GetConnection())
             using (SqlTransaction trans = conn.BeginTransaction())
             {
-                using (SqlCommand comm = new SqlCommand("DELETE phrase_words WHERE phrase_id = @phrase_id", conn))
+                using (SqlCommand comm = new SqlCommand("DELETE phrase_words WHERE phrase_id = @phrase_id", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@phrase_id", id);
                     comm.ExecuteNonQuery();
                 }
 
-                using (SqlCommand comm = new SqlCommand("DELETE phrase WHERE phrase_id = @phrase_id", conn))
+                using (SqlCommand comm = new SqlCommand("DELETE phrase WHERE phrase_id = @phrase_id", conn, trans))
                 {
                     comm.Parameters.AddWithValue("@phrase_id", id);
                     comm.ExecuteNonQuery();
@@ -458,7 +458,7 @@ namespace SongService
             using (SqlConnection conn = GetConnection())
             using (SqlCommand comm = new SqlCommand("SELECT phrase_id, word " +
                                                     "FROM phrase_words pw " +
-                                                    "JOIN word w ON pw.word_id = w.word " +
+                                                    "JOIN word w ON pw.word_id = w.word_id " +
                                                     "ORDER BY phrase_id, order_index ASC", conn))
             using (SqlDataReader dr = comm.ExecuteReader())
             {
@@ -496,7 +496,7 @@ namespace SongService
                     comm.Parameters.AddWithValue("@w" + i, words[i]);
                 }
                 comm.Connection = conn;
-                comm.CommandText = "SELECT s.song_id, s.song_name, l0.word_number_in_file " +
+                comm.CommandText = "SELECT DISTINCT s.song_id, s.song_name " +
                     "FROM song s " +
                     string.Join(" ", joinClause) +
                     " WHERE " + string.Join(" AND ", whereClause);
@@ -509,8 +509,7 @@ namespace SongService
                         ret.Add(new PhraseLocation()
                         {
                             SongId = Guid.Parse(dr["song_id"].ToString()),
-                            SongName = dr["song_name"].ToString(),
-                            WordNumberInFile = Convert.ToInt32(dr["word_number_in_file"]),
+                            SongName = dr["song_name"].ToString()
                         });
                     }
 

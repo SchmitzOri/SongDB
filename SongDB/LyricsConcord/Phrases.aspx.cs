@@ -19,15 +19,27 @@ namespace LyricsConcord
         }
 
         [WebMethod]
-        public static object AddPhrase(List<string> words)
+        public static object AddPhrase(string phrase)
         {
-            return ServiceAccessor.MakeRequest<PhraseAddRequest, PhraseAddResponse>(new PhraseAddRequest() { Words = words }, "PhraseAdd");
+            return ServiceAccessor.MakeRequest<PhraseAddRequest, PhraseAddResponse>(new PhraseAddRequest() { Words = phrase.Split(' ').ToList() }, "PhraseAdd");
         }
 
         [WebMethod]
         public static object DeletePhrase(Guid id)
         {
-            return ServiceAccessor.MakeRequest<PhraseDeleteRequest, PhraseDeleteResponse>(new PhraseDeleteRequest() { Id = id }, "PhraseAdd");
+            return ServiceAccessor.MakeRequest<PhraseDeleteRequest, PhraseDeleteResponse>(new PhraseDeleteRequest() { Id = id }, "PhraseDelete");
+        }
+
+        [WebMethod]
+        public static object GetPhraseLocs(string phrase)
+        {
+            return ServiceAccessor.MakeRequest<PhraseLocationRequest, PhraseLocationResponse>(new PhraseLocationRequest() { Phrase = phrase }, "PhraseLocations").Locations;
+        }
+
+        [WebMethod]
+        public static object GetSongLyrics(Guid songId)
+        {
+            return ServiceAccessor.MakeRequest<SongLyricsRequest, SongLyricsResponse>(new SongLyricsRequest() { SongId = songId }, "SongLyrics").SongLyrics;
         }
     }
 }

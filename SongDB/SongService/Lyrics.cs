@@ -374,7 +374,7 @@ namespace SongService
                     Id = DB.PhraseAdd(request.Words),
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new PhraseAddResponse()
                 {
