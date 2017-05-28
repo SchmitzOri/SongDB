@@ -236,7 +236,7 @@ namespace SongService
             {
                 return new GroupDeleteResponse()
                 {
-                    Success = DB.RelationDelete(request.Id),
+                    Success = DB.GroupDelete(request.Id),
                 };
             }
             catch (Exception)

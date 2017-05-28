@@ -66,6 +66,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Phrases.aspx" />
     <Content Include="packages.config" />
     <Content Include="less\mixins.less" />
     <Content Include="less\sb-admin-2.less" />
@@ -234,6 +235,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Phrases.aspx.cs">
+      <DependentUpon>Phrases.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Phrases.aspx.designer.cs">
+      <DependentUpon>Phrases.aspx</DependentUpon>
+    </Compile>
     <Compile Include="MP.Master.cs">
       <DependentUpon>MP.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

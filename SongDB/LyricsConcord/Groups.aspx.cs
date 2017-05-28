@@ -37,5 +37,11 @@ namespace LyricsConcord
         {
             return ServiceAccessor.MakeRequest<GroupUpdateRequest, GroupUpdateResponse>(new GroupUpdateRequest() { Id = id, Name = name, Words = words }, "GroupUpdate").Success;
         }
+
+        [WebMethod]
+        public static object DeleteGroup(Guid id)
+        {
+            return ServiceAccessor.MakeRequest<GroupDeleteRequest, GroupDeleteResponse>(new GroupDeleteRequest() { Id = id }, "GroupDelete").Success;
+        }
     }
 }
