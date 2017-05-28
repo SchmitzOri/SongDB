@@ -86,8 +86,6 @@ namespace CommonDTO
     public class RelationAddRequest
     {
         [DataMember]
-        public string Name { get; set; }
-        [DataMember]
         public Guid RelationType { get; set; }
         [DataMember]
         public Guid Word1 { get; set; }
@@ -112,6 +110,20 @@ namespace CommonDTO
 
     [DataContract]
     public class RelationDeleteResponse
+    {
+        [DataMember]
+        public bool Success { get; set; }
+    }
+
+    [DataContract]
+    public class RelationTypeDeleteRequest
+    {
+        [DataMember]
+        public Guid TypeId { get; set; }
+    }
+
+    [DataContract]
+    public class RelationTypeDeleteResponse
     {
         [DataMember]
         public bool Success { get; set; }

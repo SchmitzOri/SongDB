@@ -66,6 +66,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="RelationTypes.aspx" />
     <Content Include="Phrases.aspx" />
     <Content Include="packages.config" />
     <Content Include="less\mixins.less" />
@@ -235,6 +236,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RelationTypes.aspx.cs">
+      <DependentUpon>RelationTypes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RelationTypes.aspx.designer.cs">
+      <DependentUpon>RelationTypes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Phrases.aspx.cs">
       <DependentUpon>Phrases.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

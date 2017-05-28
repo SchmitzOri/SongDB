@@ -302,7 +302,7 @@ namespace SongService
                     Count = DB.RelationTypeCount(request.TypeId),
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new RelationTypeUseCountResponse()
                 {
@@ -317,7 +317,7 @@ namespace SongService
             {
                 return new RelationAddResponse()
                 {
-                    Id = DB.RelationAdd(request.Name, request.RelationType, request.Word1, request.Word2),
+                    Id = DB.RelationAdd(request.RelationType, request.Word1, request.Word2),
                 };
             }
             catch (Exception)
@@ -341,6 +341,24 @@ namespace SongService
             catch (Exception)
             {
                 return new RelationDeleteResponse()
+                {
+                    Success = false,
+                };
+            }
+        }
+
+        public RelationTypeDeleteResponse RelationTypeDelete(RelationTypeDeleteRequest request)
+        {
+            try
+            {
+                return new RelationTypeDeleteResponse()
+                {
+                    Success = DB.RelationTypeDelete(request.TypeId),
+                };
+            }
+            catch (Exception)
+            {
+                return new RelationTypeDeleteResponse()
                 {
                     Success = false,
                 };

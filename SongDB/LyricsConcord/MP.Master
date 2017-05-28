@@ -57,6 +57,17 @@
                             <a href="Phrases.aspx">Phrases</a>
                         </li>
                         <li>
+                            <a href="#">Relations<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="Relations.aspx">Relations</a>
+                                </li>
+                                <li>
+                                    <a href="RelationTypes.aspx">Relation Types</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
                             <a href="#">Words<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>

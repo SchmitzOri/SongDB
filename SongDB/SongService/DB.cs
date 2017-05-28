@@ -557,16 +557,15 @@ namespace SongService
             }
         }
 
-        internal static Guid RelationAdd(string name, Guid relationType, Guid word1, Guid word2)
+        internal static Guid RelationAdd(Guid relationType, Guid word1, Guid word2)
         {
             using (SqlConnection conn = GetConnection())
-            using (SqlCommand comm = new SqlCommand("INSERT INTO relation (relation_id, relation_type_id, relation_name, word1, word2) VALUES (@relation_id, @relation_type_id, @relation_name, @word1, @word2)", conn))
+            using (SqlCommand comm = new SqlCommand("INSERT INTO relation (relation_id, relation_type_id, word1, word2) VALUES (@relation_id, @relation_type_id, @word1, @word2)", conn))
             {
                 Guid relationId = Guid.NewGuid();
 
                 comm.Parameters.AddWithValue("@relation_id", relationId);
                 comm.Parameters.AddWithValue("@relation_type_id", relationType);
-                comm.Parameters.AddWithValue("@relation_name", name);
                 comm.Parameters.AddWithValue("@word1", word1);
                 comm.Parameters.AddWithValue("@word2", word2);
                 comm.ExecuteNonQuery();
@@ -581,6 +580,18 @@ namespace SongService
             using (SqlCommand comm = new SqlCommand("DELETE relation WHERE relation_id = @relation_id", conn))
             {
                 comm.Parameters.AddWithValue("@relation_id", id);
+                comm.ExecuteNonQuery();
+
+                return true;
+            }
+        }
+
+        internal static bool RelationTypeDelete(Guid typeId)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("DELETE relation_type WHERE type_id = @type_id", conn))
+            {
+                comm.Parameters.AddWithValue("@type_id", typeId);
                 comm.ExecuteNonQuery();
 
                 return true;
@@ -626,7 +637,7 @@ namespace SongService
             using (SqlConnection conn = GetConnection())
             using (SqlCommand comm = new SqlCommand("SELECT COUNT(*) " +
                                                     "FROM relation " +
-                                                    "WHERE relation_type = @typeId", conn))
+                                                    "WHERE relation_type_id = @typeId", conn))
             {
                 comm.Parameters.AddWithValue("@typeId", typeId);
 
