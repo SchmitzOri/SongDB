@@ -197,7 +197,7 @@ namespace SongService
         {
             SongLyricsResponse ret = new SongLyricsResponse();
 
-            ret.SongLyrics = File.ReadAllText(ConfigurationManager.AppSettings["LYRICS_FOLDER"] + songId.ToString() + ".txt");
+            ret.SongLyrics = File.ReadAllText(ConfigurationManager.AppSettings["LYRICS_FOLDER"] + songId.ToString() + ".txt", Encoding.Default);
 
             return ret;
         }
@@ -821,7 +821,7 @@ namespace SongService
 
                 #region Save File In Server
 
-                File.WriteAllText(ConfigurationManager.AppSettings["LYRICS_FOLDER"] + songId.ToString() + ".txt", Lyrics);
+                File.WriteAllText(ConfigurationManager.AppSettings["LYRICS_FOLDER"] + songId.ToString() + ".txt", Lyrics, Encoding.Default);
 
                 #endregion
 

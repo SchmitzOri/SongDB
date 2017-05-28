@@ -40,7 +40,7 @@
                       <div class="col-lg-1"><button class="btn btn-primary" data-search="next">next</button></div>
                   </div>
               </div> 
-              <div class="modal-body" id="file_content">
+              <div class="modal-body" id="file_content" style="white-space: pre-line">
               </div>
           </div>
       </div>
@@ -253,7 +253,7 @@
                 dataType: "json",
                 success: function (res) {
                     $('h4.modal-title').text(songName);
-                    $('div.modal-body').html(res.d.replace(/\n/g, "<br />"));
+                    $('div.modal-body').html(res.d);
 
                     // Mark the first phrase
                     var searchVal = phrase;
@@ -265,7 +265,7 @@
                                     "limiters": [",", "."]
                                 },
                                 separateWordSearch: false,
-                                ignorePunctuation: ["'", "`"],
+                                ignorePunctuation: ["'", "`", "’"],
                                 done: function () {
                                     $results = $content.find("mark");
                                     if (isNext) {

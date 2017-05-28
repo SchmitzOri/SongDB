@@ -25,7 +25,7 @@ namespace SongService
             string Name = null;
             string Lyrics = null;
 
-            using (StreamReader sr = new StreamReader(file))
+            using (StreamReader sr = new StreamReader(file, Encoding.Default))
             {
                 Artist = sr.ReadLine();
                 Name = sr.ReadLine();
