@@ -156,7 +156,7 @@
                 } else if (currentIndex > $results.length - 1) {
                     nextSong('');
 
-                    if (currentSong + 1 == wordSongs.length) {
+                    if (currentIndex == $results.length - 1 && currentSong + 1 == wordSongs.length) {
                         $nextBtn[0].disabled = true;
                     } 
                 }
@@ -199,7 +199,7 @@
                     }
                 });
             }
-        })
+        });
 
         $('#word_context').on('hide.bs.modal', function (e) {
             word = null;
@@ -209,7 +209,7 @@
             currentIndex = 0;
             $nextBtn[0].disabled = false;
             $prevBtn[0].disabled = false;
-        })
+        });
 
         $('#song_id').on('change', function () {
             var jsonRequest = { songId: null };

@@ -23,8 +23,6 @@ namespace CommonDTO
         public Guid SongId { get; set; }
         [DataMember]
         public string SongName { get; set; }
-        [DataMember]
-        public int WordNumberInFile { get; set; }
     }
 
     [DataContract]

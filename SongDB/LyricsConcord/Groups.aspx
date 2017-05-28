@@ -200,8 +200,8 @@
 
         $('button.delete').on('click', function () {
             var data = t.row($(this).parents('tr')).data();
-            toDel = data[0];
-            jsonRequest = { id: toDel };
+            var toDel = data[0];
+            var jsonRequest = { id: toDel };
 
             $.ajax({
                 type: "POST",
