@@ -80,6 +80,26 @@ namespace SongService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "RelationDelete")]
         RelationDeleteResponse RelationDelete(RelationDeleteRequest request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "RelationTypes")]
+        RelationTypesResponse RelationTypes(RelationTypesRequest request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "RelationAddType")]
+        RelationAddTypeResponse RelationAddType(RelationAddTypeRequest request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "RelationTypeUseCount")]
+        RelationTypeUseCountResponse RelationTypeUseCount(RelationTypeUseCountRequest request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "RelationTypeDelete")]
+        RelationTypeDeleteResponse RelationTypeDelete(RelationTypeDeleteRequest request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "RelationAll")]
+        RelationAllResponse RelationAll(RelationAllRequest request);
         #endregion
 
         #region Phrases

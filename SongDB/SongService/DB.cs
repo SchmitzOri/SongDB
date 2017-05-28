@@ -518,16 +518,53 @@ namespace SongService
             }
         }
 
-        internal static Guid RelationAdd(string name, Guid relationType, Guid word1, Guid word2)
+        internal static List<RelationDTO> RelationGetAll(Guid? typeId)
         {
             using (SqlConnection conn = GetConnection())
-            using (SqlCommand comm = new SqlCommand("INSERT INTO relation (relation_id, relation_type_id, relation_name, word1, word2) VALUES (@relation_id, @relation_type_id, @relation_name, @word1, @word2)", conn))
+            using (SqlCommand comm = new SqlCommand("SELECT r.relation_id, rt.type_id, rt.type_name, w1.word_id word_id_1, w1.word word_1, w2.word_id word_id_2, w2.word word_2 " +
+                                                    "FROM relation r " +
+                                                    "JOIN relation_type rt ON r.relation_type_id = rt.type_id " +
+                                                    "JOIN word w1 ON w1.word_id = r.word1 " +
+                                                    "JOIN word w2 ON w2.word_id = r.word2 " +
+                                                    (typeId.HasValue ? "WHERE rt.type_id = @typeId" : ""), conn))
+            {
+                if (typeId.HasValue)
+                {
+                    comm.Parameters.AddWithValue("@typeId", typeId.Value);
+                }
+
+                using (SqlDataReader dr = comm.ExecuteReader())
+                {
+                    List<RelationDTO> ret = new List<RelationDTO>();
+                    while (dr.Read())
+                    {
+                        ret.Add(new RelationDTO()
+                        {
+                            Id = Guid.Parse(dr["relation_id"].ToString()),
+                            RelationType = new RelationTypeDTO()
+                            {
+                                Id = Guid.Parse(dr["type_id"].ToString()),
+                                TypeName = dr["type_name"].ToString(),
+                            },
+                            Word1 = new Tuple<Guid, string>(Guid.Parse(dr["word_id_1"].ToString()), dr["word_1"].ToString()),
+                            Word2 = new Tuple<Guid, string>(Guid.Parse(dr["word_id_2"].ToString()), dr["word_2"].ToString()),
+                        });
+                    }
+
+                    return ret;
+                }
+            }
+        }
+
+        internal static Guid RelationAdd(Guid relationType, Guid word1, Guid word2)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("INSERT INTO relation (relation_id, relation_type_id, word1, word2) VALUES (@relation_id, @relation_type_id, @word1, @word2)", conn))
             {
                 Guid relationId = Guid.NewGuid();
 
                 comm.Parameters.AddWithValue("@relation_id", relationId);
                 comm.Parameters.AddWithValue("@relation_type_id", relationType);
-                comm.Parameters.AddWithValue("@relation_name", name);
                 comm.Parameters.AddWithValue("@word1", word1);
                 comm.Parameters.AddWithValue("@word2", word2);
                 comm.ExecuteNonQuery();
@@ -545,6 +582,65 @@ namespace SongService
                 comm.ExecuteNonQuery();
 
                 return true;
+            }
+        }
+
+        internal static bool RelationTypeDelete(Guid typeId)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("DELETE relation_type WHERE type_id = @type_id", conn))
+            {
+                comm.Parameters.AddWithValue("@type_id", typeId);
+                comm.ExecuteNonQuery();
+
+                return true;
+            }
+        }
+
+        internal static List<RelationTypeDTO> RelationTypes()
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("SELECT type_id, type_name FROM relation_type ", conn))
+            using (SqlDataReader dr = comm.ExecuteReader())
+            {
+                List<RelationTypeDTO> ret = new List<RelationTypeDTO>();
+                while (dr.Read())
+                {
+                    ret.Add(new RelationTypeDTO()
+                    {
+                        Id = Guid.Parse(dr["type_id"].ToString()),
+                        TypeName = dr["type_name"].ToString(),
+                    });
+                }
+
+                return ret;
+            }
+        }
+
+        internal static Guid RelationAddType(string name)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("INSERT INTO relation_type (type_id, type_name) VALUES (@type_id, @type_name)", conn))
+            {
+                Guid typeId = Guid.NewGuid();
+                comm.Parameters.AddWithValue("@type_id", typeId);
+                comm.Parameters.AddWithValue("@type_name", name);
+                comm.ExecuteNonQuery();
+
+                return typeId;
+            }
+        }
+
+        internal static int RelationTypeCount(Guid typeId)
+        {
+            using (SqlConnection conn = GetConnection())
+            using (SqlCommand comm = new SqlCommand("SELECT COUNT(*) " +
+                                                    "FROM relation " +
+                                                    "WHERE relation_type_id = @typeId", conn))
+            {
+                comm.Parameters.AddWithValue("@typeId", typeId);
+
+                return Convert.ToInt32(comm.ExecuteScalar());
             }
         }
 

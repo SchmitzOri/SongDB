@@ -248,13 +248,76 @@ namespace SongService
             }
         }
 
+        public RelationTypesResponse RelationTypes(RelationTypesRequest request)
+        {
+            try
+            {
+                return new RelationTypesResponse()
+                {
+                    Types = DB.RelationTypes(),
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public RelationAddTypeResponse RelationAddType(RelationAddTypeRequest request)
+        {
+            try
+            {
+                return new RelationAddTypeResponse()
+                {
+                    TypeId = DB.RelationAddType(request.Name),
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public RelationAllResponse RelationAll(RelationAllRequest request)
+        {
+            try
+            {
+                return new RelationAllResponse()
+                {
+                    Relations = DB.RelationGetAll(request.TypeId),
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public RelationTypeUseCountResponse RelationTypeUseCount(RelationTypeUseCountRequest request)
+        {
+            try
+            {
+                return new RelationTypeUseCountResponse()
+                {
+                    Count = DB.RelationTypeCount(request.TypeId),
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RelationTypeUseCountResponse()
+                {
+                    Count = 999,
+                };
+            }
+        }
+
         public RelationAddResponse RelationAdd(RelationAddRequest request)
         {
             try
             {
                 return new RelationAddResponse()
                 {
-                    Id = DB.RelationAdd(request.Name, request.RelationType, request.Word1, request.Word2),
+                    Id = DB.RelationAdd(request.RelationType, request.Word1, request.Word2),
                 };
             }
             catch (Exception)
@@ -278,6 +341,24 @@ namespace SongService
             catch (Exception)
             {
                 return new RelationDeleteResponse()
+                {
+                    Success = false,
+                };
+            }
+        }
+
+        public RelationTypeDeleteResponse RelationTypeDelete(RelationTypeDeleteRequest request)
+        {
+            try
+            {
+                return new RelationTypeDeleteResponse()
+                {
+                    Success = DB.RelationTypeDelete(request.TypeId),
+                };
+            }
+            catch (Exception)
+            {
+                return new RelationTypeDeleteResponse()
                 {
                     Success = false,
                 };
