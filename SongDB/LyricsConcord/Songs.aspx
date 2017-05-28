@@ -19,12 +19,6 @@
             Errot uploading file
         </div>
     </form>
-    <!-- Ajax doesn't work. Check Why
-        <div class="form-group">
-        <input type="file" id="song_file">
-        <input type="submit" id="upload_btn" value="Upload">
-    </div>
-    -->
     <br />
     <!-- Filter options -->
     <div class="form-group">
@@ -34,7 +28,7 @@
                 <input type="radio" name="optionsRadios" id="optionName" value="song" checked>By song name
             </label>
             <div style="display:inline-block">
-                <input class="form-control" name="filterVal" id="song" placeholder="Enter song name" disabled>
+                <input class="form-control" name="filterVal" id="song" placeholder="Enter song name">
             </div>
         </div>
         <div class="radio">
@@ -113,6 +107,7 @@
         $("input[name='optionsRadios']").change(function () {
             $("input[name='filterVal']").attr('disabled', "disabled");
             $('#' + this.value).removeAttr('disabled');
+            t.clear().draw();
         });
 
         // Filter songs
