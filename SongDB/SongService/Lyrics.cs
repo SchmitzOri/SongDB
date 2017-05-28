@@ -320,7 +320,7 @@ namespace SongService
                     Id = DB.RelationAdd(request.RelationType, request.Word1, request.Word2),
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new RelationAddResponse()
                 {
